@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>+RadioPB — Ipuc Patio Bonito</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --gold:#D4A843;--gold2:#F0C96A;--gold3:#8B6820;
+  --ember:#E84040;--sky:#2D8EFF;
+  --deep:#080A0E;--surface:#0F1218;--card:#141820;--card2:#1A2030;
+  --border:rgba(212,168,67,.15);--border2:rgba(255,255,255,.06);
+  --text:#EDE8DC;--muted:#6A6258;--muted2:#9A9080;
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--deep);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none;}
+a{text-decoration:none;color:inherit;}
+
+/* ── CURSOR ── */
+#cursor{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;
+  pointer-events:none;z-index:9999;transform:translate(-50%,-50%);
+  transition:width .15s,height .15s,opacity .2s;mix-blend-mode:difference;}
+#cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid rgba(212,168,67,.5);
+  border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);
+  transition:width .35s cubic-bezier(.34,1.56,.64,1),height .35s cubic-bezier(.34,1.56,.64,1);}
+body:has(button:hover) #cursor,body:has(a:hover) #cursor{width:18px;height:18px;}
+body:has(button:hover) #cursor-ring,body:has(a:hover) #cursor-ring{width:52px;height:52px;border-color:rgba(212,168,67,.8);}
+#cursor.hidden,#cursor-ring.hidden{opacity:0;}
+body::before{content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:1;opacity:.5;}
+#particleCanvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 3rem;height:62px;transition:background .4s,border-color .4s;}
+nav.scrolled{background:rgba(8,10,14,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.logo-mark{width:34px;height:34px;background:linear-gradient(135deg,var(--gold),var(--gold3));
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--deep);}
+.logo-text{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--gold2);}
+.nav-links{display:flex;align-items:center;gap:2rem;list-style:none;}
+.nav-links a{font-size:.78rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted2);transition:color .2s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:1px;
+  background:var(--gold);transform:scaleX(0);transform-origin:right;transition:transform .3s;}
+.nav-links a:hover{color:var(--gold2);}
+.nav-links a:hover::after{transform:scaleX(1);transform-origin:left;}
+.nav-cta{background:var(--gold)!important;color:var(--deep)!important;padding:.38rem .9rem;border-radius:6px;font-weight:700!important;}
+.nav-cta::after{display:none!important;}
+.nav-cta:hover{background:var(--gold2)!important;}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;padding-top:62px;}
+.hero-bg{position:absolute;inset:0;
+  background:radial-gradient(ellipse 90% 60% at 50% 40%,rgba(212,168,67,.07) 0%,transparent 65%),
+    radial-gradient(ellipse 40% 40% at 15% 60%,rgba(232,64,64,.04) 0%,transparent 55%),
+    radial-gradient(ellipse 40% 40% at 85% 60%,rgba(45,142,255,.04) 0%,transparent 55%),var(--deep);}
+.hero-grid{position:absolute;inset:0;
+  background-image:linear-gradient(rgba(212,168,67,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(212,168,67,.035) 1px,transparent 1px);
+  background-size:72px 72px;
+  mask-image:radial-gradient(ellipse 85% 80% at 50% 50%,black 0%,transparent 70%);
+  animation:gridDrift 22s linear infinite;}
+@keyframes gridDrift{from{background-position:0 0;}to{background-position:72px 72px;}}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:760px;padding:2rem;
+  opacity:0;animation:riseIn .9s .1s forwards;}
+@keyframes riseIn{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+.live-badge{display:inline-flex;align-items:center;gap:8px;
+  background:rgba(232,64,64,.1);border:1px solid rgba(232,64,64,.25);color:var(--ember);
+  font-size:.7rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;
+  padding:.32rem .9rem;border-radius:100px;margin-bottom:1.4rem;}
+.live-dot{width:7px;height:7px;background:var(--ember);border-radius:50%;animation:blink 1.1s ease infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.15;}}
+.hero-eyebrow{font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:.5rem;}
+.hero-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(3.5rem,10vw,7rem);font-weight:700;line-height:.92;color:#fff;margin-bottom:.6rem;}
+.hero-h1 em{display:block;font-style:italic;
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--muted2);line-height:1.6;margin-bottom:2.5rem;}
+.hero-sub strong{color:var(--gold);font-style:normal;}
+.hero-btns{display:flex;align-items:center;justify-content:center;gap:1.2rem;flex-wrap:wrap;margin-bottom:2.8rem;}
+.stream-btn{position:relative;display:flex;align-items:center;gap:14px;padding:1.1rem 2.2rem;border:none;border-radius:100px;
+  font-family:'DM Sans',sans-serif;font-size:.92rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  overflow:hidden;transition:all .35s cubic-bezier(.34,1.56,.64,1);}
+.stream-btn:hover{transform:translateY(-4px) scale(1.04);}
+.stream-btn:active{transform:scale(.97)!important;}
+.btn-audio{background:linear-gradient(135deg,#c0392b,var(--ember));color:#fff;
+  box-shadow:0 6px 28px rgba(232,64,64,.3);animation:audioPulse 2.8s ease infinite;}
+@keyframes audioPulse{0%,100%{box-shadow:0 6px 28px rgba(232,64,64,.3),0 0 0 0 rgba(232,64,64,.2);}
+  50%{box-shadow:0 6px 28px rgba(232,64,64,.3),0 0 0 14px rgba(232,64,64,0);}}
+.btn-audio:hover{box-shadow:0 14px 40px rgba(232,64,64,.5),0 0 0 8px rgba(232,64,64,.08);}
+.btn-video{background:linear-gradient(135deg,#1a5fb8,var(--sky));color:#fff;box-shadow:0 6px 28px rgba(45,142,255,.3);}
+.btn-video:hover{box-shadow:0 14px 40px rgba(45,142,255,.5),0 0 0 8px rgba(45,142,255,.08);}
+.btn-icon-wrap{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);}
+.stream-btn:hover .btn-icon-wrap{transform:scale(1.15) rotate(-5deg);}
+.btn-txt{display:flex;flex-direction:column;align-items:flex-start;}
+.btn-txt-small{font-size:.6rem;letter-spacing:.12em;opacity:.7;line-height:1;}
+.btn-txt-main{font-size:1rem;font-weight:700;line-height:1;margin-top:2px;}
+.hero-stats{display:flex;align-items:center;justify-content:center;gap:2rem;flex-wrap:wrap;}
+.stat{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.stat-n{font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:700;color:var(--gold2);line-height:1;}
+.stat-l{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);}
+.stat-sep{width:1px;height:28px;background:var(--border);}
+.scroll-cue{position:absolute;bottom:1.8rem;left:50%;
+  display:flex;flex-direction:column;align-items:center;gap:6px;opacity:.45;
+  animation:bounceY 2s ease-in-out infinite;}
+@keyframes bounceY{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(6px);}}
+.scroll-cue{transform:translateX(-50%);}
+.scroll-cue span{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+.scroll-mouse{width:20px;height:30px;border:1.5px solid var(--muted);border-radius:10px;
+  display:flex;align-items:flex-start;justify-content:center;padding-top:4px;}
+.scroll-mouse-dot{width:3px;height:6px;background:var(--gold);border-radius:2px;
+  animation:scrollDot 1.6s ease-in-out infinite;}
+@keyframes scrollDot{0%,100%{transform:translateY(0);opacity:1;}80%{transform:translateY(8px);opacity:0;}}
+
+/* ═══════════════════════════════════════════
+   EN VIVO — SPLIT LAYOUT: PLAYER | CHAT
+═══════════════════════════════════════════ */
+.live-section{position:relative;z-index:2;background:var(--surface);padding:5rem 2rem;}
+.live-inner{max-width:1260px;margin:0 auto;}
+
+/* Section header */
+.live-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2rem;}
+.live-header-left .s-label{font-size:.7rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--ember);margin-bottom:.3rem;}
+.live-header-left h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:700;color:#fff;}
+
+/* Mode tabs */
+.stream-tabs{display:flex;gap:.4rem;background:rgba(255,255,255,.03);border:1px solid var(--border2);border-radius:100px;padding:.35rem;}
+.stream-tab{display:flex;align-items:center;gap:7px;padding:.42rem 1.2rem;border-radius:100px;border:none;
+  background:transparent;color:var(--muted2);font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;transition:all .28s;}
+.stream-tab:hover{color:var(--text);}
+.stream-tab.active.t-audio{background:var(--ember);color:#fff;}
+.stream-tab.active.t-video{background:var(--sky);color:#fff;}
+.tab-dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:blink 1.1s ease infinite;}
+
+/* Main split grid */
+.live-body{
+  display:grid;
+  grid-template-columns:1fr 360px;
+  gap:1.2rem;
+  align-items:stretch;
+}
+@media(max-width:960px){.live-body{grid-template-columns:1fr;}}
+
+/* ── LEFT: player panel ── */
+.player-panel{
+  background:var(--card);border:1px solid var(--border);border-radius:20px;
+  overflow:hidden;display:flex;flex-direction:column;
+}
+
+/* Audio mode */
+.audio-player{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:3.5rem 2.5rem;text-align:center;position:relative;overflow:hidden;
+  min-height:420px;
+}
+.audio-player::before{
+  content:'';position:absolute;top:50%;left:50%;
+  width:600px;height:600px;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(232,64,64,.06) 0%,transparent 60%);
+  animation:glowPulse 3s ease-in-out infinite;pointer-events:none;
+}
+@keyframes glowPulse{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1);}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1);}}
+.audio-grid{position:absolute;inset:0;
+  background-image:linear-gradient(rgba(212,168,67,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(212,168,67,.025) 1px,transparent 1px);
+  background-size:46px 46px;
+  mask-image:radial-gradient(ellipse 85% 85% at 50% 50%,black 0%,transparent 70%);
+  pointer-events:none;}
+.audio-top-badge{display:inline-flex;align-items:center;gap:7px;
+  background:rgba(232,64,64,.1);border:1px solid rgba(232,64,64,.22);color:var(--ember);
+  font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  padding:.3rem .85rem;border-radius:100px;margin-bottom:1.8rem;position:relative;z-index:1;}
+.audio-top-dot{width:6px;height:6px;background:var(--ember);border-radius:50%;animation:blink 1.1s ease infinite;}
+.audio-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3vw,2.2rem);
+  font-weight:700;color:#fff;margin-bottom:.4rem;position:relative;z-index:1;}
+.audio-sub{font-size:.85rem;color:var(--muted2);font-weight:300;line-height:1.6;
+  margin-bottom:2.2rem;position:relative;z-index:1;}
+
+/* Ring + big play */
+.big-play-wrap{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:1rem;margin-bottom:2rem;}
+.ring-wrap{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:110px;height:110px;pointer-events:none;}
+.ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(232,64,64,.22);
+  animation:ringExpand 2.4s ease-out infinite;}
+.ring:nth-child(2){animation-delay:.8s;}
+.ring:nth-child(3){animation-delay:1.6s;}
+@keyframes ringExpand{0%{transform:scale(1);opacity:.7;}100%{transform:scale(3);opacity:0;}}
+.big-play-btn{position:relative;z-index:2;width:84px;height:84px;border-radius:50%;border:none;
+  background:linear-gradient(135deg,#c0392b,var(--ember));color:#fff;font-size:1.7rem;
+  display:flex;align-items:center;justify-content:center;padding-left:5px;
+  box-shadow:0 8px 32px rgba(232,64,64,.45),0 0 0 6px rgba(232,64,64,.1);
+  transition:all .35s cubic-bezier(.34,1.56,.64,1);}
+.big-play-btn:hover{transform:scale(1.1);box-shadow:0 14px 44px rgba(232,64,64,.6),0 0 0 12px rgba(232,64,64,.08);}
+.big-play-btn:active{transform:scale(.95);}
+.big-play-btn.playing{background:linear-gradient(135deg,#7B1FA2,#9C27B0);padding-left:0;
+  box-shadow:0 8px 32px rgba(156,39,176,.45),0 0 0 6px rgba(156,39,176,.1);}
+.big-play-btn.playing:hover{box-shadow:0 14px 44px rgba(156,39,176,.6),0 0 0 12px rgba(156,39,176,.08);}
+.big-play-label{font-size:.78rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);transition:color .3s;}
+.big-play-label.on{color:var(--ember);}
+
+/* Waveform */
+.live-wave{display:flex;align-items:center;justify-content:center;gap:3px;height:38px;
+  position:relative;z-index:1;opacity:0;transition:opacity .4s;pointer-events:none;}
+.live-wave.visible{opacity:1;}
+.lw-bar{width:4px;border-radius:3px;min-height:4px;
+  background:linear-gradient(to top,rgba(232,64,64,.4),rgba(232,64,64,.85));}
+.lw-bar.on{animation:lwAnim .6s ease-in-out infinite alternate;}
+@keyframes lwAnim{from{height:4px;}to{height:30px;}}
+
+/* Video mode */
+.video-player{flex:1;position:relative;display:none;}
+.video-player.active{display:block;}
+.video-player::before{content:'';display:block;padding-top:56.25%;}
+.video-player iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
+.video-spinner{position:absolute;inset:0;z-index:2;display:flex;align-items:center;justify-content:center;
+  background:var(--card);transition:opacity .3s;}
+.video-spinner.hidden{opacity:0;pointer-events:none;}
+.spinner{width:34px;height:34px;border:2.5px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* player bottom bar */
+.player-bar-bottom{
+  padding:.85rem 1.4rem;border-top:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;
+}
+.pbb-left{display:flex;align-items:center;gap:10px;}
+.pbb-badge{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 9px;border-radius:100px;}
+.pbb-badge.audio{background:rgba(232,64,64,.12);color:var(--ember);border:1px solid rgba(232,64,64,.22);}
+.pbb-badge.video{background:rgba(45,142,255,.12);color:var(--sky);border:1px solid rgba(45,142,255,.22);}
+.pbb-title{font-size:.84rem;font-weight:600;color:var(--text);}
+.pbb-sub{font-size:.7rem;color:var(--muted2);font-weight:300;}
+.pbb-right{display:flex;gap:.5rem;}
+.pbb-btn{display:flex;align-items:center;gap:5px;padding:.38rem .85rem;border-radius:8px;
+  border:1px solid var(--border2);background:rgba(255,255,255,.04);color:var(--muted2);
+  font-size:.72rem;font-weight:500;transition:all .2s;}
+.pbb-btn:hover{background:rgba(255,255,255,.08);color:var(--text);border-color:rgba(212,168,67,.25);}
+
+/* ─────────────────────────────────────────
+   RIGHT: LIVE CHAT
+───────────────────────────────────────── */
+.chat-panel{
+  background:var(--card);border:1px solid var(--border);border-radius:20px;
+  display:flex;flex-direction:column;overflow:hidden;
+  min-height:500px;
+}
+
+/* chat header */
+.chat-header{
+  padding:.85rem 1.2rem;border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.chat-header-left{display:flex;align-items:center;gap:10px;}
+.chat-icon{width:34px;height:34px;border-radius:9px;background:rgba(212,168,67,.1);
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.chat-title{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;color:#fff;}
+.chat-online{display:flex;align-items:center;gap:5px;
+  font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);}
+.online-dot{width:6px;height:6px;background:#22C55E;border-radius:50%;animation:blink 2s ease infinite;}
+.chat-clear-btn{font-size:.68rem;font-weight:500;color:var(--muted);padding:.3rem .7rem;
+  border-radius:6px;border:1px solid var(--border2);background:transparent;transition:all .2s;}
+.chat-clear-btn:hover{background:rgba(255,255,255,.06);color:var(--text);}
+
+/* messages area */
+.chat-messages{
+  flex:1;overflow-y:auto;padding:1rem;
+  display:flex;flex-direction:column;gap:.65rem;
+  scrollbar-width:thin;scrollbar-color:rgba(212,168,67,.15) transparent;
+}
+.chat-messages::-webkit-scrollbar{width:4px;}
+.chat-messages::-webkit-scrollbar-track{background:transparent;}
+.chat-messages::-webkit-scrollbar-thumb{background:rgba(212,168,67,.15);border-radius:4px;}
+
+/* message bubble */
+.chat-msg{display:flex;gap:8px;align-items:flex-start;animation:msgIn .3s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes msgIn{from{opacity:0;transform:translateY(10px) scale(.96);}to{opacity:1;transform:translateY(0) scale(1);}}
+.chat-msg.own{flex-direction:row-reverse;}
+.chat-avatar{width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:.8rem;
+  font-weight:700;border:1px solid var(--border2);}
+.chat-bubble-wrap{display:flex;flex-direction:column;gap:2px;max-width:80%;}
+.chat-msg.own .chat-bubble-wrap{align-items:flex-end;}
+.chat-name{font-size:.62rem;font-weight:600;letter-spacing:.05em;color:var(--muted2);
+  padding:0 4px;}
+.chat-bubble{
+  padding:.48rem .85rem;border-radius:12px;
+  font-size:.82rem;line-height:1.45;word-break:break-word;
+  background:var(--card2);border:1px solid var(--border2);color:var(--text);
+}
+.chat-msg.own .chat-bubble{
+  background:rgba(212,168,67,.1);border-color:rgba(212,168,67,.2);color:var(--text);
+}
+.chat-msg.system .chat-bubble{
+  background:rgba(34,197,94,.07);border-color:rgba(34,197,94,.2);
+  color:rgba(34,197,94,.8);font-style:italic;font-size:.76rem;
+}
+.chat-time{font-size:.58rem;color:var(--muted);padding:0 4px;}
+
+/* name color variants */
+.n-gold{color:var(--gold2)!important;}
+.n-red{color:#F87171!important;}
+.n-blue{color:#60A5FA!important;}
+.n-green{color:#4ADE80!important;}
+.n-purple{color:#C084FC!important;}
+
+/* typing indicator */
+.typing-indicator{display:flex;align-items:center;gap:8px;padding:.5rem;opacity:0;
+  transition:opacity .3s;font-size:.72rem;color:var(--muted);font-style:italic;}
+.typing-indicator.visible{opacity:1;}
+.typing-dots{display:flex;gap:3px;}
+.typing-dots span{width:5px;height:5px;background:var(--muted2);border-radius:50%;animation:typeDot .9s ease-in-out infinite;}
+.typing-dots span:nth-child(2){animation-delay:.2s;}
+.typing-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes typeDot{0%,80%,100%{transform:scale(.7);opacity:.4;}40%{transform:scale(1);opacity:1;}}
+
+/* chat input */
+.chat-input-area{padding:.85rem 1rem;border-top:1px solid var(--border2);flex-shrink:0;}
+.chat-nick-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem;}
+.nick-label{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;white-space:nowrap;}
+.nick-input{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:7px;
+  padding:.32rem .7rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.78rem;
+  outline:none;transition:border-color .2s;}
+.nick-input:focus{border-color:rgba(212,168,67,.4);}
+.chat-input-row{display:flex;gap:.5rem;}
+.chat-input{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:10px;
+  padding:.55rem .9rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.83rem;
+  outline:none;resize:none;height:40px;transition:border-color .2s;line-height:1.4;}
+.chat-input:focus{border-color:rgba(212,168,67,.4);height:40px;}
+.chat-input::placeholder{color:var(--muted);}
+.chat-send-btn{width:40px;height:40px;border-radius:10px;flex-shrink:0;border:none;
+  background:linear-gradient(135deg,var(--gold3),var(--gold));color:var(--deep);
+  font-size:1rem;display:flex;align-items:center;justify-content:center;
+  transition:all .25s;}
+.chat-send-btn:hover{transform:scale(1.08);box-shadow:0 4px 14px rgba(212,168,67,.35);}
+.chat-send-btn:active{transform:scale(.95);}
+.emoji-row{display:flex;gap:.35rem;margin-top:.5rem;flex-wrap:wrap;}
+.emoji-btn{font-size:1rem;background:none;border:none;padding:2px 4px;border-radius:5px;
+  transition:transform .15s;line-height:1;}
+.emoji-btn:hover{transform:scale(1.3);}
+
+/* ── PROGRAMS ── */
+.programs-section{position:relative;z-index:2;background:var(--deep);padding:5rem 2rem;}
+.prog-inner{max-width:1160px;margin:0 auto;}
+.prog-header{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;margin-bottom:2.5rem;}
+.s-label{font-size:.7rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;}
+.s-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;color:#fff;line-height:1.05;}
+.s-sub{font-size:.88rem;color:var(--muted2);font-weight:300;max-width:480px;line-height:1.7;margin-top:.4rem;}
+.day-tabs{display:flex;gap:.4rem;flex-wrap:wrap;background:rgba(255,255,255,.03);border:1px solid var(--border2);border-radius:100px;padding:.35rem;}
+.day-tab{padding:.38rem 1rem;border-radius:100px;border:none;background:transparent;color:var(--muted2);
+  font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:500;letter-spacing:.05em;text-transform:uppercase;transition:all .25s;}
+.day-tab:hover{color:var(--text);}
+.day-tab.active{background:var(--gold);color:var(--deep);font-weight:700;}
+.programs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem;}
+.prog-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;
+  transition:all .35s cubic-bezier(.34,1.56,.64,1);position:relative;}
+.prog-card.on-air{border-color:rgba(232,64,64,.35);}
+.prog-card:hover{transform:translateY(-5px) scale(1.01);border-color:var(--gold3);
+  box-shadow:0 20px 50px rgba(0,0,0,.45),0 0 0 1px rgba(212,168,67,.1);}
+.prog-card.on-air:hover{border-color:rgba(232,64,64,.5);}
+.prog-visual{aspect-ratio:16/9;background:linear-gradient(135deg,var(--card2) 0%,var(--deep) 100%);
+  display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.prog-visual::before{content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(212,168,67,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(212,168,67,.04) 1px,transparent 1px);background-size:22px 22px;}
+.prog-emoji{font-size:2.8rem;position:relative;z-index:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,.4));
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+.prog-card:hover .prog-emoji{transform:scale(1.15);}
+.prog-visual::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,.65) 0%,transparent 55%);z-index:2;}
+.prog-time{position:absolute;bottom:8px;left:8px;z-index:3;background:var(--gold);color:var(--deep);
+  font-size:.62rem;font-weight:700;letter-spacing:.05em;padding:3px 8px;border-radius:5px;}
+.on-air-badge{position:absolute;top:8px;right:8px;z-index:4;
+  display:flex;align-items:center;gap:5px;
+  background:rgba(10,10,14,.75);backdrop-filter:blur(8px);
+  border:1px solid rgba(232,64,64,.5);border-radius:100px;padding:4px 9px;
+  opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;transform:scale(.85) translateY(-4px);}
+.on-air-badge.visible{opacity:1;transform:scale(1) translateY(0);}
+.on-air-dot{width:6px;height:6px;background:var(--ember);border-radius:50%;animation:blink 1s ease infinite;flex-shrink:0;}
+.on-air-text{font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ember);white-space:nowrap;}
+.card-wave{position:absolute;bottom:8px;right:8px;z-index:4;
+  display:flex;align-items:flex-end;gap:2px;height:18px;opacity:0;transition:opacity .4s;pointer-events:none;}
+.prog-card.on-air.playing-card .card-wave{opacity:1;}
+.cw-bar{width:3px;border-radius:2px;background:var(--ember);min-height:3px;}
+.cw-bar.on{animation:cwAnim .55s ease-in-out infinite alternate;}
+@keyframes cwAnim{from{height:3px;}to{height:16px;}}
+.prog-body{padding:1rem 1rem .9rem;}
+.prog-day-tag{font-size:.64rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:4px;}
+.prog-name{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:700;color:#fff;line-height:1.25;margin-bottom:3px;}
+.prog-host{font-size:.75rem;color:var(--muted2);font-weight:300;}
+.prog-card.on-air .prog-name{background:linear-gradient(90deg,var(--ember),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* ── ABOUT ── */
+.about-section{position:relative;z-index:2;background:var(--surface);padding:5rem 2rem;}
+.about-inner{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+.about-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2.2rem;position:relative;}
+.about-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),transparent);border-radius:var(--radius) var(--radius) 0 0;}
+.about-quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--text);line-height:1.55;margin-bottom:.8rem;}
+.about-ref{font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);font-weight:700;}
+.about-float{position:absolute;right:-1.5rem;bottom:-1.5rem;
+  background:linear-gradient(135deg,var(--gold),var(--gold3));border-radius:12px;
+  padding:1.1rem 1.7rem;color:var(--deep);text-align:center;
+  box-shadow:0 12px 28px rgba(212,168,67,.3);animation:float 4s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+.about-float strong{display:block;font-family:'Bebas Neue',sans-serif;font-size:2.2rem;line-height:1;}
+.about-float span{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+.features-list{list-style:none;margin-top:1.6rem;display:flex;flex-direction:column;gap:.8rem;}
+.features-list li{display:flex;align-items:center;gap:12px;font-size:.86rem;color:var(--text);font-weight:300;
+  padding:.55rem .75rem;border-radius:9px;background:rgba(255,255,255,.02);border:1px solid var(--border2);transition:all .25s;}
+.features-list li:hover{background:rgba(212,168,67,.05);border-color:rgba(212,168,67,.2);transform:translateX(4px);}
+.feat-icon{width:30px;height:30px;border-radius:8px;background:rgba(212,168,67,.1);
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .65s ease,transform .65s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+.reveal-l{opacity:0;transform:translateX(-26px);transition:opacity .65s ease,transform .65s ease;}
+.reveal-l.in{opacity:1;transform:translateX(0);}
+.reveal-r{opacity:0;transform:translateX(26px);transition:opacity .65s ease,transform .65s ease;}
+.reveal-r.in{opacity:1;transform:translateX(0);}
+
+/* footer */
+footer{background:#050608;border-top:1px solid var(--border);padding:3rem 2rem;position:relative;z-index:2;}
+.footer-grid{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;}
+.footer-desc{font-size:.82rem;color:var(--muted);font-weight:300;line-height:1.7;max-width:260px;margin-top:.8rem;}
+.footer-head{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:1rem;}
+.footer-links{list-style:none;}
+.footer-links li{margin-bottom:.55rem;}
+.footer-links a{font-size:.82rem;color:var(--muted2);font-weight:300;transition:color .2s;}
+.footer-links a:hover{color:var(--text);}
+.footer-bottom{max-width:1160px;margin:2rem auto 0;border-top:1px solid rgba(255,255,255,.04);
+  padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+.footer-bottom p{font-size:.72rem;color:var(--muted);font-weight:300;letter-spacing:.05em;}
+
+@media(max-width:900px){
+  .about-inner{grid-template-columns:1fr;}
+  .about-float{right:0;bottom:-1.5rem;}
+  .footer-grid{grid-template-columns:1fr;}
+}
+@media(max-width:640px){
+  nav{padding:0 1.2rem;}
+  .nav-links{display:none;}
+  .hero-btns{flex-direction:column;align-items:center;}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<canvas id="particleCanvas"></canvas>
+<!-- Hidden audio embed -->
+<iframe id="audioIframe" src="" allow="autoplay"
+  style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;border:none;" title="Audio Stream"></iframe>
+
+<!-- ══════════ NAV ══════════ -->
+<nav id="mainNav">
+  <div class="nav-logo"><div class="logo-mark">+PB</div><span class="logo-text">RadioPB</span></div>
+  <ul class="nav-links">
+    <li><a href="#en-vivo">En Vivo</a></li>
+    <li><a href="#programas">Programación</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="contacto-section.html">Contactanos</a></li>
+    <li><a href="ofrenda-section.html" class="nav-cta">Dar Ofrenda</a></li>
+  </ul>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+  <div class="hero-bg"></div><div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="live-badge"><div class="live-dot"></div>Al Aire · 24/7</div>
+    <p class="hero-eyebrow">Ipuc Patio Bonito · Bogotá, Colombia</p>
+    <h1 class="hero-h1">Más<em>RadioPB</em></h1>
+    <p class="hero-sub"><strong>"Id por todo el mundo</strong> y predicad el evangelio<br>a toda criatura." — Marcos 16:15</p>
+    <div class="hero-btns">
+      <button class="stream-btn btn-audio" onclick="goLive('audio')">
+        <div class="btn-icon-wrap">📻</div>
+        <div class="btn-txt"><span class="btn-txt-small">Escuchar ahora</span><span class="btn-txt-main">Streaming Audio</span></div>
+      </button>
+      <button class="stream-btn btn-video" onclick="goLive('video')">
+        <div class="btn-icon-wrap">📺</div>
+        <div class="btn-txt"><span class="btn-txt-small">Ver en vivo</span><span class="btn-txt-main">Streaming Video</span></div>
+      </button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-n">24/7</span><span class="stat-l">Transmisión</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><span class="stat-n">8+</span><span class="stat-l">Programas</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><span class="stat-n">2025</span><span class="stat-l">Temporada</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><span class="stat-n">PB</span><span class="stat-l">Patio Bonito</span></div>
+    </div>
+  </div>
+  <div class="scroll-cue">
+    <span>Explorar</span>
+    <div class="scroll-mouse"><div class="scroll-mouse-dot"></div></div>
+  </div>
+</section>
+
+<!-- ══════════ EN VIVO ══════════ -->
+<section class="live-section" id="en-vivo">
+  <div class="live-inner">
+
+    <!-- Header -->
+    <div class="live-header reveal">
+      <div class="live-header-left">
+        <p class="s-label">● Transmisión en vivo</p>
+        <h2>En Vivo Ahora</h2>
+      </div>
+      <div class="stream-tabs">
+        <button class="stream-tab active t-audio" id="tabAudio" onclick="switchMode('audio',this)">
+          <span class="tab-dot"></span> Radio Audio
+        </button>
+        <button class="stream-tab t-video" id="tabVideo" onclick="switchMode('video',this)">
+          <span class="tab-dot"></span> Video Live
+        </button>
+      </div>
+    </div>
+
+    <!-- Body: player + chat -->
+    <div class="live-body reveal">
+
+      <!-- LEFT: Player -->
+      <div class="player-panel">
+
+        <!-- AUDIO MODE -->
+        <div class="audio-player" id="audioMode">
+          <div class="audio-grid"></div>
+          <div class="audio-top-badge"><div class="audio-top-dot"></div>Radio En Vivo</div>
+          <div class="audio-title">+RadioPB · Transmisión</div>
+          <div class="audio-sub">Programación cristiana 24/7<br>Bogotá, Colombia</div>
+          <div class="big-play-wrap">
+            <div class="ring-wrap"><div class="ring"></div><div class="ring"></div><div class="ring"></div></div>
+            <button class="big-play-btn" id="bigPlayBtn" onclick="toggleAudio()">▶</button>
+            <span class="big-play-label" id="bigPlayLabel">Reproducir Radio</span>
+          </div>
+          <div class="live-wave" id="liveWave">
+            <div class="lw-bar" style="animation-delay:.00s"></div><div class="lw-bar" style="animation-delay:.07s"></div>
+            <div class="lw-bar" style="animation-delay:.14s"></div><div class="lw-bar" style="animation-delay:.04s"></div>
+            <div class="lw-bar" style="animation-delay:.20s"></div><div class="lw-bar" style="animation-delay:.10s"></div>
+            <div class="lw-bar" style="animation-delay:.17s"></div><div class="lw-bar" style="animation-delay:.05s"></div>
+            <div class="lw-bar" style="animation-delay:.23s"></div><div class="lw-bar" style="animation-delay:.12s"></div>
+            <div class="lw-bar" style="animation-delay:.18s"></div><div class="lw-bar" style="animation-delay:.08s"></div>
+            <div class="lw-bar" style="animation-delay:.25s"></div><div class="lw-bar" style="animation-delay:.03s"></div>
+            <div class="lw-bar" style="animation-delay:.15s"></div><div class="lw-bar" style="animation-delay:.21s"></div>
+          </div>
+        </div>
+
+        <!-- VIDEO MODE -->
+        <div class="video-player" id="videoMode">
+          <div class="video-spinner" id="videoSpinner"><div class="spinner"></div></div>
+          <iframe id="videoIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen onload="document.getElementById('videoSpinner').classList.add('hidden')"></iframe>
+        </div>
+
+        <!-- Bottom bar -->
+        <div class="player-bar-bottom">
+          <div class="pbb-left">
+            <span class="pbb-badge audio" id="pbbBadge">● En Vivo</span>
+            <div>
+              <div class="pbb-title" id="pbbTitle">+RadioPB · Transmisión de Audio</div>
+              <div class="pbb-sub" id="pbbSub">Bogotá, Colombia · 24/7</div>
+            </div>
+          </div>
+          <div class="pbb-right">
+            <a href="https://www.youtube.com/@masradiopb7493" target="_blank" class="pbb-btn">↗ YouTube</a>
+            <a href="https://ipucpatiobonito.com/chatradio.html" target="_blank" class="pbb-btn">🌐 Sitio</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Chat -->
+      <div class="chat-panel">
+        <!-- Header -->
+        <div class="chat-header">
+          <div class="chat-header-left">
+            <div class="chat-icon">💬</div>
+            <div>
+              <div class="chat-title">Chat en Vivo</div>
+              <div class="chat-online"><div class="online-dot"></div><span id="onlineCount">3 conectados</span></div>
+            </div>
+          </div>
+          <button class="chat-clear-btn" onclick="clearChat()">Limpiar</button>
+        </div>
+
+        <!-- Messages -->
+        <div class="chat-messages" id="chatMessages"></div>
+
+        <!-- Typing indicator -->
+        <div class="typing-indicator" id="typingIndicator">
+          <div class="typing-dots"><span></span><span></span><span></span></div>
+          <span id="typingName">alguien está escribiendo...</span>
+        </div>
+
+        <!-- Input -->
+        <div class="chat-input-area">
+          <div class="chat-nick-row">
+            <span class="nick-label">Nick:</span>
+            <input class="nick-input" id="nickInput" type="text" maxlength="18" placeholder="Tu nombre" value="Oyente"/>
+          </div>
+          <div class="chat-input-row">
+            <input class="chat-input" id="chatInput" type="text" maxlength="200"
+              placeholder="Escribe un mensaje..."
+              onkeydown="if(event.key==='Enter')sendMsg()"/>
+            <button class="chat-send-btn" onclick="sendMsg()">➤</button>
+          </div>
+          <div class="emoji-row">
+            <button class="emoji-btn" onclick="addEmoji('🙏')">🙏</button>
+            <button class="emoji-btn" onclick="addEmoji('✝️')">✝️</button>
+            <button class="emoji-btn" onclick="addEmoji('🎵')">🎵</button>
+            <button class="emoji-btn" onclick="addEmoji('❤️')">❤️</button>
+            <button class="emoji-btn" onclick="addEmoji('🔥')">🔥</button>
+            <button class="emoji-btn" onclick="addEmoji('👏')">👏</button>
+            <button class="emoji-btn" onclick="addEmoji('😊')">😊</button>
+            <button class="emoji-btn" onclick="addEmoji('🌟')">🌟</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /live-body -->
+  </div>
+</section>
+
+<!-- ══════════ PROGRAMS ══════════ -->
+<section class="programs-section" id="programas">
+  <div class="prog-inner">
+    <div class="prog-header reveal">
+      <div>
+        <p class="s-label">Nuestra Parrilla</p>
+        <h2 class="s-title">Programas Destacados</h2>
+        <p class="s-sub">El ícono <span style="color:var(--ember);font-weight:600;">● En Vivo</span> aparece sobre el programa al aire según el horario.</p>
+      </div>
+      <div class="day-tabs">
+        <button class="day-tab active" onclick="filterDay(this,'todos')">Todos</button>
+        <button class="day-tab" onclick="filterDay(this,'lunes')">Lun</button>
+        <button class="day-tab" onclick="filterDay(this,'miercoles')">Mié</button>
+        <button class="day-tab" onclick="filterDay(this,'viernes')">Vie</button>
+        <button class="day-tab" onclick="filterDay(this,'sabado')">Sáb</button>
+        <button class="day-tab" onclick="filterDay(this,'diario')">Diario</button>
+      </div>
+    </div>
+    <div class="programs-grid" id="progGrid"></div>
+  </div>
+</section>
+
+<!-- ══════════ ABOUT ══════════ -->
+<section class="about-section" id="nosotros">
+  <div class="about-inner">
+    <div style="position:relative;padding:0 2rem 2.5rem 0;" class="reveal-l">
+      <div class="about-card">
+        <p class="about-quote">"Transmitir un contenido integral y de mucha edificación para la sociedad."</p>
+        <p class="about-ref">+RadioPB · Misión</p>
+      </div>
+      <div class="about-float"><strong>+PB</strong><span>Radio</span></div>
+    </div>
+    <div class="reveal-r">
+      <p class="s-label">Quiénes Somos</p>
+      <h2 class="s-title">MasRadioPb<br>Ipuc Patio Bonito</h2>
+      <p style="font-size:.9rem;color:var(--muted2);font-weight:300;max-width:480px;line-height:1.7;margin-top:.8rem;">
+        Aquí encuentras programación para todas las edades, todos los días. Desde Bogotá llevamos la Palabra a toda criatura.
+      </p>
+      <ul class="features-list">
+        <li><div class="feat-icon">📡</div>Transmisión 24/7 de radio y video en vivo</li>
+        <li><div class="feat-icon">📖</div>Estudios bíblicos y enseñanza profunda</li>
+        <li><div class="feat-icon">🎵</div>Música cristiana · PbWorship</li>
+        <li><div class="feat-icon">🤝</div>4 familias misioneras en Bogotá</li>
+        <li><div class="feat-icon">📱</div>App disponible para Android</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="nav-logo"><div class="logo-mark">+PB</div><span class="logo-text">RadioPB</span></div>
+      <p class="footer-desc">La radio cristiana de Ipuc Patio Bonito. Transmitiendo fe, esperanza y amor desde Bogotá.</p>
+    </div>
+    <div>
+      <div class="footer-head">Navegación</div>
+      <ul class="footer-links">
+        <li><a href="#en-vivo">En Vivo</a></li><li><a href="#programas">Programación</a></li>
+        <li><a href="#nosotros">Nosotros</a></li><li><a href="#">Galería</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-head">Contacto</div>
+      <ul class="footer-links">
+        <li><a href="#">Carrera 88 No 38-20 Sur, Bogotá</a></li>
+        <li><a href="mailto:masradiopb@gmail.com">masradiopb@gmail.com</a></li>
+        <li><a href="#">+57 320 333 4162</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 IPUCPB · Todos los derechos reservados · Desarrollado por DIAT</p>
+    <p>Bogotá, Colombia</p>
+  </div>
+</footer>
+
+<!-- ══════════ SCRIPTS ══════════ -->
+<script>
+/* ── CURSOR ── */
+const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';cur.classList.remove('hidden');ring.classList.remove('hidden');});
+document.addEventListener('mouseleave',()=>{cur.classList.add('hidden');ring.classList.add('hidden');});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+
+/* ── PARTICLES ── */
+const canvas=document.getElementById('particleCanvas'),ctx=canvas.getContext('2d');
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}resize();addEventListener('resize',resize);
+const pts=Array.from({length:100},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+  vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28,r:Math.random()*1.4+.3,
+  a:Math.random()*.35+.05,life:0,max:200+Math.random()*300}));
+(function anim(){ctx.clearRect(0,0,canvas.width,canvas.height);
+  pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life++;
+    if(p.life>p.max){p.x=Math.random()*canvas.width;p.y=Math.random()*canvas.height;p.life=0;}
+    const a=p.a*Math.sin((p.life/p.max)*Math.PI);
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(212,168,67,${a})`;ctx.fill();});
+  requestAnimationFrame(anim);})();
+
+addEventListener('scroll',()=>document.getElementById('mainNav').classList.toggle('scrolled',scrollY>40));
+
+/* ══ STREAM CONFIG ══
+   Reemplaza con tus URLs reales:
+   AUDIO_SRC → URL de tu stream de audio o embed YouTube live
+   VIDEO_SRC → embed de YouTube video live
+*/
+const AUDIO_SRC = 'https://www.youtube.com/embed/4GQl1_ItREU?autoplay=1&rel=0';
+const VIDEO_SRC = 'https://www.youtube.com/embed/4GQl1_ItREU?list=RD4GQl1_ItREU&autoplay=1&rel=0&modestbranding=1';
+
+let currentMode = 'audio';
+let audioPlaying = false;
+
+/* ── MODE SWITCH (audio ↔ video) ── */
+function switchMode(mode, btn){
+  if(currentMode === mode) return;
+  currentMode = mode;
+
+  document.querySelectorAll('.stream-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+
+  const audioEl = document.getElementById('audioMode');
+  const videoEl = document.getElementById('videoMode');
+  const badge   = document.getElementById('pbbBadge');
+  const title   = document.getElementById('pbbTitle');
+  const sub     = document.getElementById('pbbSub');
+  const vif     = document.getElementById('videoIframe');
+  const vsp     = document.getElementById('videoSpinner');
+
+  if(mode === 'audio'){
+    videoEl.classList.remove('active');
+    audioEl.style.display = 'flex';
+    vif.src = '';
+    badge.className = 'pbb-badge audio';
+    title.textContent = '+RadioPB · Transmisión de Audio';
+    sub.textContent   = 'Bogotá, Colombia · 24/7';
+  } else {
+    audioEl.style.display = 'none';
+    videoEl.classList.add('active');
+    vsp.classList.remove('hidden');
+    vif.src = VIDEO_SRC;
+    badge.className = 'pbb-badge video';
+    title.textContent = '+RadioPB · Streaming de Video';
+    sub.textContent   = 'Cultos en vivo · Estudios bíblicos';
+  }
+}
+
+/* ── AUDIO TOGGLE ── */
+function toggleAudio(){
+  const btn   = document.getElementById('bigPlayBtn');
+  const label = document.getElementById('bigPlayLabel');
+  const wave  = document.getElementById('liveWave');
+  const bars  = wave.querySelectorAll('.lw-bar');
+  const iframe= document.getElementById('audioIframe');
+
+  audioPlaying = !audioPlaying;
+  if(audioPlaying){
+    iframe.src = AUDIO_SRC;
+    btn.textContent='⏸'; btn.classList.add('playing');
+    label.textContent='Reproduciendo...'; label.classList.add('on');
+    wave.classList.add('visible'); bars.forEach(b=>b.classList.add('on'));
+    document.querySelectorAll('.prog-card.on-air').forEach(c=>c.classList.add('playing-card'));
+    addSystemMsg('📻 Radio iniciada — ¡Que lo disfrutes!');
+    updateOnline(+1);
+  } else {
+    iframe.src='';
+    btn.textContent='▶'; btn.classList.remove('playing');
+    label.textContent='Reproducir Radio'; label.classList.remove('on');
+    wave.classList.remove('visible'); bars.forEach(b=>b.classList.remove('on'));
+    document.querySelectorAll('.prog-card').forEach(c=>c.classList.remove('playing-card'));
+  }
+}
+
+/* hero buttons scroll + auto-switch */
+function goLive(mode){
+  document.getElementById('en-vivo').scrollIntoView({behavior:'smooth'});
+  setTimeout(()=>{
+    const tab = mode==='audio' ? document.getElementById('tabAudio') : document.getElementById('tabVideo');
+    switchMode(mode, tab);
+  }, 600);
+}
+
+/* ══ CHAT ENGINE ══ */
+const nameColors = ['n-gold','n-red','n-blue','n-green','n-purple'];
+const botUsers = [
+  {name:'Rodrigo M.', color:'n-gold'},
+  {name:'Diego C.',   color:'n-blue'},
+  {name:'Anyith E.',  color:'n-green'},
+  {name:'Fam. Radio', color:'n-purple'},
+  {name:'PBKids',     color:'n-red'},
+];
+const botMsgs = [
+  '¡Dios les bendiga a todos! 🙏','¡Excelente transmisión hoy!','¡Gloria a Dios! 🔥',
+  '¡El Señor es bueno! ✝️','Escuchando desde Bogotá ❤️','¡Que bendición estar aquí!',
+  'Saludos a toda la comunidad 👏','¡El Faro es mi programa favorito!','¡Feliz de escuchar +RadioPB!',
+  'Amén hermanos 🌟','¡Que siga la bendición!','¡Los saludo con mucho amor!',
+];
+
+let onlineBase = 3;
+function updateOnline(delta){
+  onlineBase = Math.max(1, onlineBase + delta);
+  document.getElementById('onlineCount').textContent = onlineBase + ' conectados';
+}
+
+function getTime(){
+  return new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
+}
+
+function addMsg(name, text, type='other', color=''){
+  const area = document.getElementById('chatMessages');
+  const div  = document.createElement('div');
+  div.className = 'chat-msg ' + type;
+
+  const avatarBg = type==='own'   ? 'background:rgba(212,168,67,.15);border-color:rgba(212,168,67,.25);' :
+                   type==='system'? 'background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.2);' :
+                                    'background:rgba(255,255,255,.05);';
+  const initials = name.slice(0,2).toUpperCase();
+
+  div.innerHTML = type === 'system' ? `
+    <div class="chat-bubble-wrap" style="width:100%;">
+      <div class="chat-bubble system">${text}</div>
+    </div>` : `
+    <div class="chat-avatar" style="${avatarBg}">${type==='own'?'👤':initials.slice(0,1)}</div>
+    <div class="chat-bubble-wrap">
+      <span class="chat-name ${color}">${name}</span>
+      <div class="chat-bubble">${text}</div>
+      <span class="chat-time">${getTime()}</span>
+    </div>`;
+
+  area.appendChild(div);
+  area.scrollTop = area.scrollHeight;
+}
+
+function addSystemMsg(text){
+  addMsg('', text, 'system');
+}
+
+function sendMsg(){
+  const inp  = document.getElementById('chatInput');
+  const nick = document.getElementById('nickInput').value.trim() || 'Oyente';
+  const text = inp.value.trim();
+  if(!text) return;
+  addMsg(nick, escapeHtml(text), 'own', 'n-gold');
+  inp.value = '';
+  // simulate reply
+  setTimeout(simulateBotMsg, 1200 + Math.random()*2000);
+}
+
+function addEmoji(e){
+  document.getElementById('chatInput').value += e;
+  document.getElementById('chatInput').focus();
+}
+
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function simulateBotMsg(){
+  const u = botUsers[Math.floor(Math.random()*botUsers.length)];
+  const m = botMsgs[Math.floor(Math.random()*botMsgs.length)];
+  addMsg(u.name, m, 'other', u.color);
+}
+
+function clearChat(){
+  document.getElementById('chatMessages').innerHTML='';
+  addSystemMsg('💬 Chat limpiado · Bienvenido de nuevo');
+}
+
+/* Initial bot messages */
+function seedChat(){
+  addSystemMsg('✝️ Bienvenido al chat de +RadioPB · ¡Escucha en vivo!');
+  setTimeout(()=>{ addMsg(botUsers[0].name,'¡Buenas! escuchando desde Bogotá 🙏','other',botUsers[0].color); },700);
+  setTimeout(()=>{ addMsg(botUsers[2].name,'¡Que bendición esta programación! ✝️','other',botUsers[2].color); },1600);
+  setTimeout(()=>{ addMsg(botUsers[1].name,'¡Saludos a todos los oyentes! 🎵','other',botUsers[1].color); },2800);
+}
+seedChat();
+
+/* Auto bot messages every 18-35s */
+function scheduleBot(){
+  const delay = 18000 + Math.random()*17000;
+  setTimeout(()=>{
+    // show typing
+    const ti = document.getElementById('typingIndicator');
+    const tn = document.getElementById('typingName');
+    const u  = botUsers[Math.floor(Math.random()*botUsers.length)];
+    tn.textContent = u.name + ' está escribiendo...';
+    ti.classList.add('visible');
+    setTimeout(()=>{
+      ti.classList.remove('visible');
+      addMsg(u.name, botMsgs[Math.floor(Math.random()*botMsgs.length)], 'other', u.color);
+      updateOnline(Math.random()>.5?1:-1);
+      scheduleBot();
+    }, 1400 + Math.random()*800);
+  }, delay);
+}
+scheduleBot();
+
+/* ══ PROGRAMS ══ */
+const programs=[
+  {emoji:'🌅',time:'05:00–06:00am',day:'diario',dayLabel:'Lun–Sáb',name:'Despierto y Aún Estoy Contigo',host:'Pastor Rodrigo Muñoz',schedule:{days:[1,2,3,4,5,6],startH:5,startM:0,endH:6,endM:0}},
+  {emoji:'🛣️',time:'08:00–09:00pm',day:'lunes',dayLabel:'Lunes',name:'El Camino de la Salvación',host:'Misiones PB',schedule:{days:[1],startH:20,startM:0,endH:21,endM:0}},
+  {emoji:'🌊',time:'08:00–09:30pm',day:'viernes',dayLabel:'Viernes',name:'El Faro',host:'Jóvenes PB',schedule:{days:[5],startH:20,startM:0,endH:21,endM:30}},
+  {emoji:'🌺',time:'04:00–05:00pm',day:'viernes',dayLabel:'Viernes',name:'Talita Cumi',host:'Jaidin Ortega',schedule:{days:[5],startH:16,startM:0,endH:17,endM:0}},
+  {emoji:'🎺',time:'10:00am–12:00pm',day:'sabado',dayLabel:'Sábados',name:'Conexión Tropical',host:'Anyith Estrada',schedule:{days:[6],startH:10,startM:0,endH:12,endM:0}},
+  {emoji:'📜',time:'07:30–09:00pm',day:'miercoles',dayLabel:'Miércoles',name:'Raíces de Antaño',host:'Diego Calderón',schedule:{days:[3],startH:19,startM:30,endH:21,endM:0}},
+  {emoji:'👶',time:'03:00–04:00pm',day:'sabado',dayLabel:'Sábados',name:'Más Radio PBKids',host:'Escuela Infantil',schedule:{days:[6],startH:15,startM:0,endH:16,endM:0}},
+  {emoji:'👑',time:'09:00–10:30am',day:'diario',dayLabel:'Lun–Vie',name:'Mujer VIP',host:'Dorcas Nacional',schedule:{days:[1,2,3,4,5],startH:9,startM:0,endH:10,endM:30}},
+];
+function isOnAir(p){
+  const now=new Date(),dow=now.getDay(),mins=now.getHours()*60+now.getMinutes(),s=p.schedule;
+  return s.days.includes(dow)&&mins>=s.startH*60+s.startM&&mins<s.endH*60+s.endM;
+}
+function renderPrograms(filter='todos'){
+  const grid=document.getElementById('progGrid');
+  const list=filter==='todos'?programs:programs.filter(p=>p.day===filter);
+  grid.innerHTML='';
+  list.forEach((p,i)=>{
+    const onAir=isOnAir(p);
+    const card=document.createElement('div');
+    card.className='prog-card reveal'+(onAir?' on-air':'');
+    card.style.transitionDelay=(i*.05)+'s';
+    card.innerHTML=`
+      <div class="prog-visual">
+        <div class="prog-emoji">${p.emoji}</div>
+        <div class="prog-time">${p.time}</div>
+        <div class="on-air-badge${onAir?' visible':''}"><div class="on-air-dot"></div><span class="on-air-text">En Vivo</span></div>
+        <div class="card-wave">
+          <div class="cw-bar${onAir?' on':''}" style="animation-delay:.00s"></div>
+          <div class="cw-bar${onAir?' on':''}" style="animation-delay:.12s"></div>
+          <div class="cw-bar${onAir?' on':''}" style="animation-delay:.06s"></div>
+          <div class="cw-bar${onAir?' on':''}" style="animation-delay:.18s"></div>
+          <div class="cw-bar${onAir?' on':''}" style="animation-delay:.09s"></div>
+        </div>
+      </div>
+      <div class="prog-body">
+        <div class="prog-day-tag">${p.dayLabel}</div>
+        <div class="prog-name">${p.name}</div>
+        <div class="prog-host">${p.host}</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+  setTimeout(()=>grid.querySelectorAll('.reveal').forEach(el=>el.classList.add('in')),60);
+}
+renderPrograms();
+function filterDay(btn,day){
+  document.querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');renderPrograms(day);
+}
+setInterval(()=>renderPrograms(document.querySelector('.day-tab.active')?.getAttribute('onclick')?.match(/'(\w+)'/)?.[1]||'todos'),60000);
+
+/* scroll reveal */
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});},{threshold:.1});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

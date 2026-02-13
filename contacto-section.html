@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Contáctanos · +RadioPB</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --gold:#D4A843;--gold2:#F0C96A;--gold3:#8B6820;
+  --deep:#080A0E;--surface:#0F1218;--card:#141820;--card2:#1A2030;
+  --border:rgba(212,168,67,.15);--border2:rgba(255,255,255,.06);
+  --text:#EDE8DC;--muted:#6A6258;--muted2:#9A9080;
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--deep);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none;}
+a{text-decoration:none;color:inherit;}
+
+/* ── CURSOR ── */
+#cursor{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;
+  pointer-events:none;z-index:9999;transform:translate(-50%,-50%);
+  transition:width .15s,height .15s,opacity .2s;mix-blend-mode:difference;}
+#cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid rgba(212,168,67,.5);
+  border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);
+  transition:width .35s cubic-bezier(.34,1.56,.64,1),height .35s cubic-bezier(.34,1.56,.64,1);}
+body:has(button:hover) #cursor,body:has(a:hover) #cursor,
+body:has(input:focus) #cursor,body:has(textarea:focus) #cursor{width:14px;height:14px;}
+body:has(button:hover) #cursor-ring,body:has(a:hover) #cursor-ring{width:52px;height:52px;border-color:rgba(212,168,67,.8);}
+#cursor.hidden,#cursor-ring.hidden{opacity:0;}
+
+body::before{content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:1;opacity:.5;}
+#particleCanvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.3;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 3rem;height:62px;background:rgba(8,10,14,.92);
+  backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-mark{width:34px;height:34px;background:linear-gradient(135deg,var(--gold),var(--gold3));
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--deep);}
+.logo-text{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--gold2);}
+.nav-back{display:flex;align-items:center;gap:8px;
+  font-size:.78rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted2);transition:color .2s;}
+.nav-back:hover{color:var(--gold2);}
+.nav-back svg{transition:transform .2s;}
+.nav-back:hover svg{transform:translateX(-3px);}
+
+/* ── PAGE HERO ── */
+.page-hero{
+  min-height:38vh;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;padding-top:62px;text-align:center;
+}
+.page-hero-bg{position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 60%,rgba(212,168,67,.07) 0%,transparent 65%),var(--deep);}
+.page-hero-grid{position:absolute;inset:0;
+  background-image:linear-gradient(rgba(212,168,67,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(212,168,67,.035) 1px,transparent 1px);
+  background-size:68px 68px;
+  mask-image:radial-gradient(ellipse 90% 80% at 50% 50%,black 0%,transparent 70%);
+  animation:gridDrift 22s linear infinite;}
+@keyframes gridDrift{from{background-position:0 0;}to{background-position:68px 68px;}}
+.page-hero-content{position:relative;z-index:2;max-width:640px;padding:2rem;
+  opacity:0;animation:riseIn .8s .1s forwards;}
+@keyframes riseIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+.page-cross{font-size:1.8rem;margin-bottom:1rem;animation:crossPulse 3s ease-in-out infinite;}
+@keyframes crossPulse{0%,100%{opacity:.6;transform:scale(1);}50%{opacity:1;transform:scale(1.06);}}
+.page-label{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:.5rem;}
+.page-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,8vw,5rem);
+  font-weight:700;line-height:.95;color:#fff;margin-bottom:.8rem;}
+.page-h1 em{display:block;font-style:italic;
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.page-sub{font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:1rem;color:var(--muted2);line-height:1.6;}
+.page-sub strong{color:var(--gold);font-style:normal;}
+
+/* ── MAIN ── */
+.main{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:3.5rem 2rem 5rem;}
+
+/* ═══════════════════════════════
+   TOP STRIP — quick contact cards
+═══════════════════════════════ */
+.contact-strip{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:1rem;margin-bottom:3rem;
+}
+.contact-chip{
+  background:var(--card);border:1px solid var(--border2);border-radius:var(--radius);
+  padding:1.2rem 1.4rem;display:flex;align-items:center;gap:14px;
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);text-decoration:none;
+  position:relative;overflow:hidden;
+}
+.contact-chip::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold3),var(--gold));
+  transform:scaleX(0);transform-origin:left;transition:transform .35s;}
+.contact-chip:hover{transform:translateY(-4px);border-color:var(--gold3);
+  box-shadow:0 16px 36px rgba(0,0,0,.4);}
+.contact-chip:hover::before{transform:scaleX(1);}
+.chip-icon{width:42px;height:42px;border-radius:11px;flex-shrink:0;
+  background:rgba(212,168,67,.1);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);}
+.contact-chip:hover .chip-icon{transform:scale(1.12) rotate(-5deg);}
+.chip-text{display:flex;flex-direction:column;gap:2px;}
+.chip-label{font-size:.63rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;}
+.chip-value{font-size:.88rem;font-weight:600;color:var(--text);line-height:1.3;}
+
+/* ═══════════════════════════════
+   MAIN GRID — map + form
+═══════════════════════════════ */
+.contact-grid{
+  display:grid;grid-template-columns:1fr 420px;
+  gap:1.5rem;align-items:start;
+}
+@media(max-width:960px){.contact-grid{grid-template-columns:1fr;}}
+
+/* ── LEFT: map block ── */
+.map-block{display:flex;flex-direction:column;gap:1rem;}
+
+/* Map frame */
+.map-frame{
+  border-radius:20px;overflow:hidden;
+  border:1px solid var(--border);
+  box-shadow:0 20px 50px rgba(0,0,0,.45);
+  position:relative;
+}
+.map-frame iframe{
+  width:100%;height:420px;border:none;display:block;
+  filter:grayscale(30%) contrast(1.05);
+  transition:filter .4s;
+}
+.map-frame:hover iframe{filter:grayscale(0%) contrast(1.1);}
+
+/* Map overlay header */
+.map-overlay-top{
+  position:absolute;top:0;left:0;right:0;
+  background:linear-gradient(to bottom,rgba(8,10,14,.75) 0%,transparent 100%);
+  padding:1rem 1.2rem;z-index:2;pointer-events:none;
+  display:flex;align-items:center;gap:10px;
+}
+.map-pin-badge{
+  display:flex;align-items:center;gap:7px;
+  background:rgba(8,10,14,.8);backdrop-filter:blur(10px);
+  border:1px solid var(--border);border-radius:100px;
+  padding:.35rem .9rem;
+}
+.map-pin-dot{width:7px;height:7px;background:var(--gold);border-radius:50%;
+  animation:blink 2s ease infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+.map-pin-text{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold2);}
+
+/* Rating chip */
+.map-rating{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(8,10,14,.8);backdrop-filter:blur(10px);
+  border:1px solid var(--border);border-radius:100px;
+  padding:.35rem .9rem;
+}
+.map-rating-stars{font-size:.7rem;}
+.map-rating-text{font-size:.7rem;font-weight:700;color:var(--gold2);}
+.map-rating-count{font-size:.65rem;color:var(--muted2);}
+
+/* Directions button over map */
+.map-dir-btn{
+  position:absolute;bottom:1rem;right:1rem;z-index:2;
+  display:flex;align-items:center;gap:8px;
+  background:var(--gold);color:var(--deep);
+  font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;
+  padding:.6rem 1.2rem;border-radius:100px;
+  box-shadow:0 6px 20px rgba(212,168,67,.35);
+  transition:all .3s;
+}
+.map-dir-btn:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 10px 28px rgba(212,168,67,.45);}
+
+/* Schedule card */
+.schedule-card{
+  background:var(--card);border:1px solid var(--border2);border-radius:var(--radius);
+  padding:1.4rem;position:relative;overflow:hidden;
+}
+.schedule-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),transparent);border-radius:var(--radius) var(--radius) 0 0;}
+.sch-title{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:1rem;
+  display:flex;align-items:center;gap:8px;}
+.sch-rows{display:flex;flex-direction:column;gap:.5rem;}
+.sch-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.5rem .7rem;border-radius:8px;
+  background:rgba(255,255,255,.02);border:1px solid var(--border2);
+  transition:all .2s;
+}
+.sch-row:hover{background:rgba(212,168,67,.05);border-color:rgba(212,168,67,.15);}
+.sch-row.today{background:rgba(212,168,67,.07);border-color:rgba(212,168,67,.25);}
+.sch-day{font-size:.78rem;font-weight:500;color:var(--text);}
+.sch-row.today .sch-day{color:var(--gold2);font-weight:700;}
+.sch-time{font-size:.75rem;color:var(--muted2);font-weight:300;}
+.sch-row.today .sch-time{color:var(--gold);}
+.sch-closed{font-size:.72rem;color:var(--muted);font-style:italic;}
+.today-tag{font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--gold);color:var(--deep);padding:2px 6px;border-radius:4px;margin-left:6px;}
+
+/* Reviews strip */
+.reviews-strip{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+@media(max-width:500px){.reviews-strip{grid-template-columns:1fr;}}
+.review-card{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:1rem;
+  transition:all .25s;}
+.review-card:hover{border-color:rgba(212,168,67,.2);transform:translateY(-3px);}
+.review-stars{font-size:.75rem;margin-bottom:.45rem;color:var(--gold);}
+.review-text{font-size:.75rem;color:var(--muted2);line-height:1.55;font-weight:300;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.review-source{font-size:.62rem;color:var(--muted);margin-top:.4rem;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;}
+
+/* ── RIGHT: form block ── */
+.form-block{
+  background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:2rem;position:relative;overflow:hidden;
+}
+.form-block::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),transparent);border-radius:20px 20px 0 0;}
+.form-block::after{
+  content:'';position:absolute;top:-60%;right:-40%;
+  width:400px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(212,168,67,.04) 0%,transparent 60%);
+  pointer-events:none;
+}
+.form-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:#fff;
+  margin-bottom:.3rem;}
+.form-sub{font-size:.82rem;color:var(--muted2);font-weight:300;line-height:1.6;margin-bottom:1.6rem;}
+
+/* topic pills */
+.topic-pills{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.4rem;}
+.topic-pill{padding:.32rem .85rem;border-radius:100px;border:1px solid var(--border2);
+  background:rgba(255,255,255,.03);color:var(--muted2);font-size:.72rem;font-weight:500;
+  letter-spacing:.05em;text-transform:uppercase;transition:all .2s;}
+.topic-pill:hover{border-color:rgba(212,168,67,.3);color:var(--text);}
+.topic-pill.active{background:rgba(212,168,67,.12);border-color:var(--gold);color:var(--gold2);font-weight:700;}
+
+/* form fields */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem;}
+@media(max-width:500px){.form-row{grid-template-columns:1fr;}}
+.form-group{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.8rem;}
+.form-label{font-size:.67rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;}
+.form-input,.form-textarea,.form-select{
+  background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:10px;
+  padding:.58rem .9rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.85rem;
+  outline:none;transition:border-color .2s,box-shadow .2s;width:100%;
+}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--muted);}
+.form-input:focus,.form-textarea:focus,.form-select:focus{
+  border-color:rgba(212,168,67,.5);
+  box-shadow:0 0 0 3px rgba(212,168,67,.06);
+}
+.form-textarea{resize:vertical;min-height:110px;line-height:1.5;}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236A6258' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right .9rem center;padding-right:2.2rem;cursor:pointer;}
+.form-select option{background:var(--card);color:var(--text);}
+
+/* submit button */
+.form-submit{
+  width:100%;padding:.9rem;border:none;border-radius:100px;
+  background:linear-gradient(135deg,var(--gold3),var(--gold));
+  color:var(--deep);font-family:'DM Sans',sans-serif;
+  font-size:.9rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 6px 22px rgba(212,168,67,.25);
+  margin-top:.4rem;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.form-submit:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(212,168,67,.4);}
+.form-submit:active{transform:scale(.97);}
+.form-submit.sent{background:linear-gradient(135deg,#166534,#22C55E);color:#fff;
+  box-shadow:0 6px 22px rgba(34,197,94,.25);}
+
+/* success state */
+.form-success{
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:2rem 1rem;gap:.8rem;min-height:200px;
+}
+.form-success.visible{display:flex;}
+.success-icon{font-size:2.8rem;animation:successPop .5s cubic-bezier(.34,1.56,.64,1);}
+@keyframes successPop{from{transform:scale(0);}to{transform:scale(1);}}
+.success-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:#fff;}
+.success-sub{font-size:.84rem;color:var(--muted2);font-weight:300;line-height:1.6;max-width:260px;}
+.success-back{margin-top:.5rem;font-size:.75rem;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--gold);background:none;border:none;transition:color .2s;}
+.success-back:hover{color:var(--gold2);}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .65s ease,transform .65s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+.reveal-l{opacity:0;transform:translateX(-26px);transition:opacity .65s ease,transform .65s ease;}
+.reveal-l.in{opacity:1;transform:translateX(0);}
+.reveal-r{opacity:0;transform:translateX(26px);transition:opacity .65s ease,transform .65s ease;}
+.reveal-r.in{opacity:1;transform:translateX(0);}
+
+/* ── FOOTER ── */
+footer{background:#050608;border-top:1px solid var(--border);padding:2rem;
+  position:relative;z-index:2;text-align:center;}
+footer p{font-size:.72rem;color:var(--muted);font-weight:300;letter-spacing:.05em;}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<canvas id="particleCanvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a href="Index.html" class="nav-logo">
+    <div class="logo-mark">+PB</div>
+    <span class="logo-text">RadioPB</span>
+  </a>
+  <a href="Index.html" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Volver al inicio
+  </a>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-grid"></div>
+  <div class="page-hero-content">
+    <div class="page-cross">✝</div>
+    <p class="page-label">Ipuc Patio Bonito · Bogotá</p>
+    <h1 class="page-h1">Contác<em>tanos</em></h1>
+    <p class="page-sub"><strong>"Venid a mí todos los que estáis trabajados</strong><br>y cargados." — Mateo 11:28</p>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- CONTACT STRIP -->
+  <div class="contact-strip reveal">
+    <a href="https://maps.google.com/?q=Cra+88+%2338-20+Sur+Bogotá" target="_blank" class="contact-chip">
+      <div class="chip-icon">📍</div>
+      <div class="chip-text">
+        <span class="chip-label">Dirección</span>
+        <span class="chip-value">Cra. 88 #38-20 Sur<br>Kennedy, Bogotá</span>
+      </div>
+    </a>
+    <a href="mailto:masradiopb@gmail.com" class="contact-chip">
+      <div class="chip-icon">✉️</div>
+      <div class="chip-text">
+        <span class="chip-label">Correo</span>
+        <span class="chip-value">masradiopb@gmail.com</span>
+      </div>
+    </a>
+    <a href="tel:+573203334162" class="contact-chip">
+      <div class="chip-icon">📞</div>
+      <div class="chip-text">
+        <span class="chip-label">Teléfono</span>
+        <span class="chip-value">+57 320 333 4162</span>
+      </div>
+    </a>
+    <a href="tel:+573132170921" class="contact-chip">
+      <div class="chip-icon">📱</div>
+      <div class="chip-text">
+        <span class="chip-label">WhatsApp</span>
+        <span class="chip-value">+57 313 217 0921</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="contact-grid">
+
+    <!-- LEFT: Map + schedule + reviews -->
+    <div class="map-block">
+
+      <!-- MAP -->
+      <div class="map-frame reveal-l">
+        <!-- Overlay top -->
+        <div class="map-overlay-top">
+          <div class="map-pin-badge">
+            <div class="map-pin-dot"></div>
+            <span class="map-pin-text">Ipuc Patio Bonito</span>
+          </div>
+          <div class="map-rating">
+            <span class="map-rating-stars">★★★★★</span>
+            <span class="map-rating-text">4.7</span>
+            <span class="map-rating-count">(92 reseñas)</span>
+          </div>
+        </div>
+
+        <!-- Google Maps embed — Cra. 88 #38-20 Sur, Kennedy, Bogotá -->
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3977.0!2d-74.1659506!3d4.6379868!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9c3a684e4b4b%3A0xbfb281d5a3d09f65!2sIPUC%20Patio%20Bonito!5e0!3m2!1ses!2sco!4v1707000000000!5m2!1ses!2sco"
+          allowfullscreen loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+
+        <!-- Directions CTA -->
+        <a href="https://www.google.com/maps/dir/?api=1&destination=4.6379868,-74.1659506&destination_place_id=ChIJS0SeaDqcP44RZZ_Qo9WBsr8"
+          target="_blank" class="map-dir-btn">
+          🗺 Cómo llegar
+        </a>
+      </div>
+
+      <!-- SCHEDULE -->
+      <div class="schedule-card reveal-l" style="transition-delay:.1s;">
+        <div class="sch-title">🕐 Horarios de Culto</div>
+        <div class="sch-rows" id="scheduleRows"></div>
+      </div>
+
+      <!-- REVIEWS -->
+      <div class="reveal-l" style="transition-delay:.15s;">
+        <p style="font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:.8rem;">
+          ⭐ Lo que dicen nuestros visitantes
+        </p>
+        <div class="reviews-strip">
+          <div class="review-card">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">"Un lugar hermoso con atmósfera familiar especial. Puedes sentir la presencia del Dios vivo allí."</p>
+            <p class="review-source">Google · Visitante</p>
+          </div>
+          <div class="review-card">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">"Una gran familia donde puedes sentir el amor de Dios. El templo es muy hermoso y bien mantenido."</p>
+            <p class="review-source">Google · Visitante</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: Contact Form -->
+    <div class="form-block reveal-r">
+
+      <!-- Form content -->
+      <div id="formContent">
+        <div class="form-title">Envíanos un mensaje</div>
+        <p class="form-sub">¿Tienes preguntas, peticiones de oración o quieres saber más sobre nuestra iglesia? Escríbenos.</p>
+
+        <!-- Topic pills -->
+        <div class="topic-pills">
+          <button class="topic-pill active" onclick="selectTopic(this)">Información</button>
+          <button class="topic-pill" onclick="selectTopic(this)">Oración</button>
+          <button class="topic-pill" onclick="selectTopic(this)">Radio</button>
+          <button class="topic-pill" onclick="selectTopic(this)">Visita</button>
+          <button class="topic-pill" onclick="selectTopic(this)">Otro</button>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nombre</label>
+            <input class="form-input" id="fName" type="text" placeholder="Tu nombre"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Apellido</label>
+            <input class="form-input" id="fLast" type="text" placeholder="Tu apellido"/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Correo electrónico</label>
+          <input class="form-input" id="fEmail" type="email" placeholder="correo@ejemplo.com"/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Teléfono / WhatsApp</label>
+          <input class="form-input" id="fPhone" type="tel" placeholder="+57 300 000 0000"/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">¿Cómo nos conociste?</label>
+          <select class="form-select" id="fSource">
+            <option value="">Selecciona una opción</option>
+            <option>Por la Radio +RadioPB</option>
+            <option>YouTube</option>
+            <option>Redes sociales</option>
+            <option>Un amigo / familiar</option>
+            <option>Búsqueda en Google</option>
+            <option>Otro</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Mensaje</label>
+          <textarea class="form-textarea" id="fMsg" placeholder="Escribe tu mensaje aquí..."></textarea>
+        </div>
+
+        <button class="form-submit" id="submitBtn" onclick="submitForm()">
+          <span id="submitIcon">✉</span>
+          <span id="submitText">Enviar Mensaje</span>
+        </button>
+      </div>
+
+      <!-- Success state -->
+      <div class="form-success" id="formSuccess">
+        <div class="success-icon">✅</div>
+        <div class="success-title">¡Mensaje enviado!</div>
+        <p class="success-sub">Gracias por escribirnos. Te responderemos pronto a través de tu correo o WhatsApp. ¡Dios te bendiga! 🙏</p>
+        <button class="success-back" onclick="resetForm()">← Enviar otro mensaje</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SOCIAL STRIP -->
+  <div class="reveal" style="margin-top:2.5rem;transition-delay:.1s;">
+    <div style="background:var(--card);border:1px solid var(--border2);border-radius:var(--radius);padding:1.4rem 2rem;
+      display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+      <div>
+        <p style="font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:.3rem;">Síguenos</p>
+        <p style="font-size:.88rem;color:var(--muted2);font-weight:300;">Conéctate con nuestra comunidad en redes</p>
+      </div>
+      <div style="display:flex;gap:.7rem;flex-wrap:wrap;">
+        <a href="https://www.youtube.com/@masradiopb7493" target="_blank"
+          style="display:flex;align-items:center;gap:7px;padding:.45rem 1rem;border-radius:8px;
+            background:rgba(255,255,255,.04);border:1px solid var(--border2);
+            font-size:.78rem;font-weight:500;color:var(--muted2);transition:all .2s;"
+          onmouseover="this.style.color='#fff';this.style.borderColor='rgba(212,168,67,.3)'"
+          onmouseout="this.style.color='';this.style.borderColor=''">
+          ▶ YouTube
+        </a>
+        <a href="https://ipucpatiobonito.com/chatradio.html" target="_blank"
+          style="display:flex;align-items:center;gap:7px;padding:.45rem 1rem;border-radius:8px;
+            background:rgba(212,168,67,.08);border:1px solid rgba(212,168,67,.2);
+            font-size:.78rem;font-weight:600;color:var(--gold);transition:all .2s;"
+          onmouseover="this.style.background='rgba(212,168,67,.15)'"
+          onmouseout="this.style.background='rgba(212,168,67,.08)'">
+          📻 Radio Online
+        </a>
+        <a href="https://ipucpatiobonito.com/masradiopb.apk"
+          style="display:flex;align-items:center;gap:7px;padding:.45rem 1rem;border-radius:8px;
+            background:rgba(255,255,255,.04);border:1px solid var(--border2);
+            font-size:.78rem;font-weight:500;color:var(--muted2);transition:all .2s;"
+          onmouseover="this.style.color='#fff';this.style.borderColor='rgba(212,168,67,.3)'"
+          onmouseout="this.style.color='';this.style.borderColor=''">
+          📱 App Android
+        </a>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>© 2025 IPUCPB · masradiopb@gmail.com · Carrera 88 #38-20 Sur, Kennedy, Bogotá</p>
+</footer>
+
+<script>
+/* ── CURSOR ── */
+const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+  cur.classList.remove('hidden');ring.classList.remove('hidden');});
+document.addEventListener('mouseleave',()=>{cur.classList.add('hidden');ring.classList.add('hidden');});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+
+/* ── PARTICLES ── */
+const canvas=document.getElementById('particleCanvas'),ctx=canvas.getContext('2d');
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}resize();addEventListener('resize',resize);
+const pts=Array.from({length:80},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+  vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.3+.3,
+  a:Math.random()*.3+.05,life:0,max:200+Math.random()*280}));
+(function anim(){ctx.clearRect(0,0,canvas.width,canvas.height);
+  pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life++;
+    if(p.life>p.max){p.x=Math.random()*canvas.width;p.y=Math.random()*canvas.height;p.life=0;}
+    const a=p.a*Math.sin((p.life/p.max)*Math.PI);
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(212,168,67,${a})`;ctx.fill();});
+  requestAnimationFrame(anim);})();
+
+/* ── SCHEDULE ── */
+const schedule=[
+  {day:'Lunes',    dow:1, time:'Cerrado',         closed:true},
+  {day:'Martes',   dow:2, time:'7:00 – 9:00 PM',  closed:false},
+  {day:'Miércoles',dow:3, time:'Cerrado',          closed:true},
+  {day:'Jueves',   dow:4, time:'7:00 – 9:00 PM',  closed:false},
+  {day:'Viernes',  dow:5, time:'Cerrado',          closed:true},
+  {day:'Sábado',   dow:6, time:'7:00 – 9:00 PM',  closed:false},
+  {day:'Domingo',  dow:0, time:'10:00 AM – 12:00 PM',closed:false},
+];
+function buildSchedule(){
+  const today=new Date().getDay();
+  const rows=document.getElementById('scheduleRows');
+  schedule.forEach(s=>{
+    const isToday=s.dow===today;
+    const div=document.createElement('div');
+    div.className='sch-row'+(isToday?' today':'');
+    div.innerHTML=`
+      <span class="sch-day">${s.day}${isToday?'<span class="today-tag">Hoy</span>':''}</span>
+      ${s.closed
+        ? `<span class="sch-closed">Cerrado</span>`
+        : `<span class="sch-time">${s.time}</span>`
+      }`;
+    rows.appendChild(div);
+  });
+}
+buildSchedule();
+
+/* ── TOPIC PILLS ── */
+function selectTopic(el){
+  document.querySelectorAll('.topic-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+}
+
+/* ── FORM SUBMIT ── */
+function submitForm(){
+  const btn=document.getElementById('submitBtn');
+  const icon=document.getElementById('submitIcon');
+  const text=document.getElementById('submitText');
+  const name=document.getElementById('fName').value.trim();
+  const email=document.getElementById('fEmail').value.trim();
+  const msg=document.getElementById('fMsg').value.trim();
+
+  if(!name||!email||!msg){
+    btn.style.animation='shake .4s ease';
+    setTimeout(()=>btn.style.animation='',450);
+    // highlight empty
+    [['fName',name],['fEmail',email],['fMsg',msg]].forEach(([id,val])=>{
+      const el=document.getElementById(id);
+      if(!val){el.style.borderColor='rgba(232,64,64,.6)';el.focus();
+        setTimeout(()=>el.style.borderColor='',2500);}
+    });
+    return;
+  }
+
+  // Sending state
+  icon.textContent='⏳'; text.textContent='Enviando...';
+  btn.style.opacity='.8'; btn.style.pointerEvents='none';
+
+  setTimeout(()=>{
+    document.getElementById('formContent').style.display='none';
+    document.getElementById('formSuccess').classList.add('visible');
+  },1600);
+}
+
+/* ── CSS shake ── */
+const style=document.createElement('style');
+style.textContent=`@keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-6px);}40%,80%{transform:translateX(6px);}}`;
+document.head.appendChild(style);
+
+function resetForm(){
+  document.getElementById('formContent').style.display='block';
+  document.getElementById('formSuccess').classList.remove('visible');
+  document.getElementById('submitBtn').style.opacity='';
+  document.getElementById('submitBtn').style.pointerEvents='';
+  document.getElementById('submitIcon').textContent='✉';
+  document.getElementById('submitText').textContent='Enviar Mensaje';
+  ['fName','fLast','fEmail','fPhone','fMsg'].forEach(id=>document.getElementById(id).value='');
+}
+
+/* ── SCROLL REVEAL ── */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
+},{threshold:.1});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
