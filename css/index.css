@@ -780,29 +780,27 @@ body {
   transform: scale(0.95);
 }
 
-/* RESPONSIVE */
-@media (max-width: 768px) {
+@media (max-width: 480px) {
 
   .chat-input-wrap {
-    padding: 1rem;
+    padding: 0; /* quitamos padding lateral */
+    width: 100%;
   }
 
   .chat-name {
     width: 30%;
-    min-width: 80px;
+    min-width: 75px;
     font-size: .75rem;
-    padding: .8rem;
   }
 
   .chat-input {
     font-size: .8rem;
-    padding: .8rem;
   }
 
   .chat-send {
     padding: 0 1rem;
-    font-size: .9rem;
   }
+
 }
 
 @media (max-width: 480px) {
