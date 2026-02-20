@@ -1,27 +1,12 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { 
-  getDatabase, 
-  ref, 
-  push, 
-  onChildAdded, 
-  query, 
-  limitToLast
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+/* =========================
+   CONFIGURAR PUSHER
+========================= */
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCpAGuzIF0Rs__ew8gl6hmJ_BCnSQGA1EM",
-  authDomain: "chat-radiopb.firebaseapp.com",
-  databaseURL: "https://chat-radiopb-default-rtdb.firebaseio.com",
-  projectId: "chat-radiopb",
-  storageBucket: "chat-radiopb.firebasestorage.app",
-  messagingSenderId: "904642345701",
-  appId: "1:904642345701:web:99f1614562a0ceaf44720c"
-};
+const pusher = new Pusher("8ac472c4fd3463c85dbd", {
+  cluster: "us2"
+});
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-const chatRef = ref(db, "chat");
+const channel = pusher.subscribe("radiopb-chat");
 
 const chatMessages = document.getElementById("chatMessages");
 const chatInput = document.getElementById("chatInput");
@@ -53,10 +38,10 @@ window.sendMessage = function() {
 
   if (!text) return;
 
-  push(chatRef, {
-    user: name,
-    text: text,
-    timestamp: Date.now()
+  fetch("/api/send-message", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, message: text })
   });
 
   chatInput.value = "";
@@ -65,18 +50,15 @@ window.sendMessage = function() {
 /* =========================
    RECIBIR MENSAJES
 ========================= */
-const chatQuery = query(chatRef, limitToLast(100));
-
-onChildAdded(chatQuery, (snapshot) => {
-  const msg = snapshot.val();
+channel.bind("nuevo-mensaje", function(data) {
 
   const div = document.createElement("div");
   div.classList.add("chat-msg");
 
   div.innerHTML = `
     <div class="msg-content">
-      <div class="msg-name">${escapeHtml(msg.user)}</div>
-      <div class="msg-text">${escapeHtml(msg.text)}</div>
+      <div class="msg-name">${escapeHtml(data.name)}</div>
+      <div class="msg-text">${escapeHtml(data.message)}</div>
     </div>
   `;
 
@@ -88,7 +70,7 @@ onChildAdded(chatQuery, (snapshot) => {
    ESCAPE HTML
 ========================= */
 function escapeHtml(text) {
-  const div = document.createElement('div');
+  const div = document.createElement("div");
   div.textContent = text;
   return div.innerHTML;
 }

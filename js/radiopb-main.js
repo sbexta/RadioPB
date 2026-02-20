@@ -1,3 +1,50 @@
+const programsScroll = document.querySelector('.programs-scroll');
+
+if (programsScroll) {
+  let isDragging = false;
+  let startX;
+  let scrollLeft;
+
+  // Cursor inicial
+  programsScroll.style.cursor = 'grab';
+
+  // Mouse down → empieza el drag
+  programsScroll.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    programsScroll.style.cursor = 'grabbing';
+    startX = e.pageX - programsScroll.offsetLeft;
+    scrollLeft = programsScroll.scrollLeft;
+  });
+
+  // Mouse move → arrastra
+  programsScroll.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - programsScroll.offsetLeft;
+    const walk = (x - startX) * 2; // x2 velocidad
+    programsScroll.scrollLeft = scrollLeft - walk;
+  });
+
+  // Mouse up → termina drag
+  programsScroll.addEventListener('mouseup', () => {
+    isDragging = false;
+    programsScroll.style.cursor = 'grab';
+  });
+
+  // Touch events para móvil
+  programsScroll.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].pageX;
+    scrollLeft = programsScroll.scrollLeft;
+  });
+
+  programsScroll.addEventListener('touchmove', (e) => {
+    const x = e.touches[0].pageX;
+    const walk = (x - startX) * 2;
+    programsScroll.scrollLeft = scrollLeft - walk;
+  });
+}
+
+
 // Menu Toggle
 const menuBtn = document.getElementById('menuBtn');
 const menuOverlay = document.getElementById('menuOverlay');
