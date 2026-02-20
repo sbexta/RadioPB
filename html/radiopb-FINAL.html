@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>+RadioPB — Radio Cristiana de Bogotá</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════════════
+   BRUTALIST DESIGN SYSTEM - RadioPB
+   Clean, Bold, High Contrast
+═══════════════════════════════════════════════════ */
+
+:root {
+  /* New Color Palette */
+  --orange: #EE6908;      /* Naranja vibrante */
+  --brown: #83371D;       /* Café/Marrón */
+  --gray-brown: #4B332E;  /* Gris café */
+  --dark: #0B1014;        /* Negro azulado oscuro */
+  --slate: #2E3E4B;       /* Azul grisáceo */
+  --powder: #BBD3EB;      /* Azul claro polvo */
+  
+  /* System colors */
+  --black: #0B1014;
+  --white: #FAFAFA;
+  --gray-light: #E5E5E5;
+  --gray: #999;
+  --gray-dark: #666;
+  
+  /* Accent mappings for easy use */
+  --primary: var(--orange);
+  --secondary: var(--brown);
+  --tertiary: var(--slate);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--white);
+  color: var(--black);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--primary);
+  color: var(--white);
+}
+
+/* ═══════════════════════════════════════════════════
+   MENU
+═══════════════════════════════════════════════════ */
+.menu-btn {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  z-index: 9999;
+  width: 56px;
+  height: 56px;
+  background: var(--black);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.menu-btn:hover {
+  background: var(--primary);
+}
+
+.menu-line {
+  width: 24px;
+  height: 2px;
+  background: var(--white);
+  transition: all .3s;
+}
+
+.menu-btn.open .menu-line:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.menu-btn.open .menu-line:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-btn.open .menu-line:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
+}
+
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: var(--primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .4s;
+}
+
+.menu-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.menu-nav {
+  list-style: none;
+  text-align: center;
+}
+
+.menu-nav li {
+  margin: 1.5rem 0;
+}
+
+.menu-nav a {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 900;
+  color: var(--white);
+  text-decoration: none;
+  letter-spacing: -.02em;
+  transition: opacity .2s;
+}
+
+.menu-nav a:hover {
+  opacity: .6;
+}
+
+/* ═══════════════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  background: var(--black);
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.hero-label {
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 2rem;
+}
+
+.hero-title {
+  font-size: clamp(4rem, 12vw, 10rem);
+  font-weight: 900;
+  line-height: .9;
+  letter-spacing: -.04em;
+  margin-bottom: 2rem;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--primary);
+}
+
+.hero-desc {
+  font-size: clamp(1.2rem, 2.5vw, 2rem);
+  font-weight: 300;
+  max-width: 800px;
+  margin-bottom: 3rem;
+}
+
+.hero-cta {
+  display: inline-block;
+  padding: 1.2rem 3rem;
+  background: var(--primary);
+  color: var(--white);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all .3s;
+}
+
+.hero-cta:hover {
+  background: var(--secondary);
+  transform: translateY(-4px);
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION BASE
+═══════════════════════════════════════════════════ */
+.section {
+  min-height: 100vh;
+  padding: 6rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-white {
+  background: var(--white);
+  color: var(--black);
+}
+
+.section-gray {
+  background: var(--gray-light);
+  color: var(--black);
+}
+
+.section-terra {
+  background: var(--primary);
+  color: var(--white);
+}
+
+.section-black {
+  background: var(--black);
+  color: var(--white);
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  max-width: 800px;
+}
+
+.section-number {
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.section-black .section-number,
+.section-terra .section-number {
+  color: rgba(255,255,255,.6);
+}
+
+.section-title {
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -.03em;
+  margin-bottom: 1.5rem;
+}
+
+.section-subtitle {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-weight: 300;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ═══════════════════════════════════════════════════
+   STREAMING SECTION
+═══════════════════════════════════════════════════ */
+.streaming-wrapper {
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Big Audio Button */
+.audio-btn {
+  width: 100%;
+  background: var(--black);
+  color: var(--white);
+  border: 4px solid var(--black);
+  padding: 3rem;
+  display: grid;
+  grid-template-columns: 100px 1fr 80px;
+  align-items: center;
+  gap: 3rem;
+  cursor: pointer;
+  transition: all .3s;
+}
+
+.audio-btn:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 48px rgba(0,0,0,.25);
+}
+
+.audio-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.audio-icon-wrap {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.audio-icon {
+  font-size: 4rem;
+}
+
+.audio-btn.active .audio-icon {
+  display: none;
+}
+
+.audio-wave {
+  display: none;
+  gap: 8px;
+  align-items: flex-end;
+  height: 60px;
+}
+
+.audio-btn.active .audio-wave {
+  display: flex;
+}
+
+.wave-bar {
+  width: 8px;
+  background: var(--white);
+  border-radius: 4px;
+  animation: wave 1s ease-in-out infinite;
+}
+
+.wave-bar:nth-child(1) { animation-delay: 0s; height: 20px; }
+.wave-bar:nth-child(2) { animation-delay: .1s; height: 40px; }
+.wave-bar:nth-child(3) { animation-delay: .2s; height: 60px; }
+.wave-bar:nth-child(4) { animation-delay: .3s; height: 40px; }
+.wave-bar:nth-child(5) { animation-delay: .4s; height: 20px; }
+
+@keyframes wave {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}
+
+.audio-content {
+  text-align: left;
+}
+
+.audio-label {
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: .8rem;
+}
+
+.audio-btn.active .audio-label {
+  color: rgba(255,255,255,.7);
+}
+
+.audio-title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  letter-spacing: -.02em;
+  margin-bottom: .5rem;
+  line-height: 1;
+}
+
+.audio-status {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--powder);
+}
+
+.audio-btn.active .audio-status {
+  color: rgba(255,255,255,.9);
+}
+
+.audio-play {
+  font-size: 3.5rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+/* Video Toggle */
+.video-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 2.5rem 3rem;
+  background: var(--black);
+  color: var(--white);
+  border: 4px solid var(--black);
+  cursor: pointer;
+  transition: all .3s;
+}
+
+.video-toggle:hover {
+  background: var(--dark);
+}
+
+.video-checkbox {
+  display: none;
+}
+
+.switch {
+  width: 70px;
+  height: 36px;
+  background: var(--gray-dark);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.switch::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 30px;
+  height: 30px;
+  background: var(--white);
+  transition: all .3s;
+}
+
+.video-checkbox:checked + .video-toggle .switch {
+  background: var(--primary);
+}
+
+.video-checkbox:checked + .video-toggle .switch::before {
+  transform: translateX(34px);
+}
+
+.video-text {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.video-icon {
+  font-size: 2.5rem;
+}
+
+.video-label {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -.01em;
+}
+
+/* Video Player */
+.video-player {
+  width: 100%;
+  background: var(--white);
+  border: 4px solid var(--black);
+  display: none;
+}
+
+.video-player.active {
+  display: block;
+}
+
+.video-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  background: var(--black);
+  color: var(--white);
+}
+
+.video-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.live-badge {
+  padding: .4rem .9rem;
+  background: #DC2626;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+}
+
+.video-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.close-btn {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 2px solid var(--white);
+  color: var(--white);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .2s;
+}
+
+.close-btn:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.video-embed {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  background: var(--black);
+}
+
+.video-embed iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* ═══════════════════════════════════════════════════
+   LIVE CHAT - Brutalist Design
+═══════════════════════════════════════════════════ */
+.chat-container {
+  width: 100%;
+  background: var(--white);
+  border: 4px solid var(--black);
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+  max-height: 80vh;
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  background: var(--black);
+  color: var(--white);
+  border-bottom: 4px solid var(--primary);
+}
+
+.chat-title {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  font-size: 1.2rem;
+  font-weight: 900;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.chat-icon {
+  font-size: 1.5rem;
+}
+
+.chat-online {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--powder);
+}
+
+.online-dot {
+  width: 8px;
+  height: 8px;
+  background: #22C55E;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  background: var(--powder);
+}
+
+.chat-messages::-webkit-scrollbar {
+  width: 12px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: var(--dark);
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border: 2px solid var(--dark);
+}
+
+.chat-msg {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  animation: msgSlide .3s ease;
+}
+
+@keyframes msgSlide {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.chat-msg.system {
+  background: var(--primary);
+  color: var(--white);
+  padding: 1rem 1.5rem;
+  font-size: .85rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  border: none;
+}
+
+.msg-icon {
+  font-size: 1.2rem;
+  margin-right: .5rem;
+}
+
+.msg-text {
+  line-height: 1.5;
+}
+
+.msg-avatar {
+  width: 42px;
+  height: 42px;
+  border: 3px solid var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .85rem;
+  font-weight: 900;
+  color: var(--white);
+  flex-shrink: 0;
+  background: var(--slate);
+}
+
+.msg-content {
+  flex: 1;
+}
+
+.msg-name {
+  font-size: .7rem;
+  font-weight: 900;
+  color: var(--dark);
+  margin-bottom: .5rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.chat-msg .msg-text {
+  font-size: .95rem;
+  line-height: 1.6;
+  color: var(--dark);
+  background: var(--white);
+  padding: 1rem 1.2rem;
+  border: 3px solid var(--black);
+  font-weight: 500;
+}
+
+.chat-msg.own {
+  flex-direction: row-reverse;
+}
+
+.chat-msg.own .msg-avatar {
+  background: var(--primary);
+  border-color: var(--dark);
+}
+
+.chat-msg.own .msg-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.chat-msg.own .msg-name {
+  text-align: right;
+  color: var(--primary);
+}
+
+.chat-msg.own .msg-text {
+  background: var(--dark);
+  color: var(--white);
+  border-color: var(--primary);
+}
+
+.chat-input-wrap {
+  display: flex;
+  align-items: stretch;
+  padding: 1.5rem;
+  background: var(--dark);
+  border-top: 4px solid var(--primary);
+  gap: 0;
+}
+
+/* INPUT NOMBRE */
+.chat-name {
+  width: 130px;
+  padding: 1rem;
+  border: 3px solid var(--white);
+  border-right: none;
+  background: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-size: .8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--dark);
+  outline: none;
+  transition: .2s;
+}
+
+.chat-name::placeholder {
+  color: var(--gray);
+  font-weight: 600;
+}
+
+.chat-name:focus {
+  border-color: var(--secondary);
+  z-index: 2;
+}
+
+/* INPUT MENSAJE */
+.chat-input {
+  flex: 1;
+  padding: 1rem 1.2rem;
+  border: 3px solid var(--white);
+  border-left: none;
+  border-right: none;
+  background: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--dark);
+  outline: none;
+  transition: .2s;
+}
+
+.chat-input:focus {
+  border-color: var(--primary);
+  z-index: 2;
+}
+
+/* BOTÓN */
+.chat-send {
+  padding: 0 1.3rem;
+  border: 3px solid var(--white);
+  border-left: none;
+  background: var(--primary);
+  color: var(--white);
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.chat-send:hover {
+  background: var(--secondary);
+}
+
+.chat-send:active {
+  transform: scale(0.95);
+}
+
+/* ═══════════════════════════════════════════════════
+   PROGRAMS HORIZONTAL SCROLL
+═══════════════════════════════════════════════════ */
+.programs-scroll {
+  width: 100%;
+  overflow-x: auto;
+  padding: 0 0 2rem;
+  scrollbar-width: none;
+}
+
+.programs-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.programs-container {
+  display: flex;
+  gap: 2rem;
+  padding: 0 2rem;
+  min-width: min-content;
+}
+
+.program-card {
+  flex: 0 0 380px;
+  background: var(--white);
+  border: 4px solid var(--black);
+  padding: 2.5rem;
+  transition: all .3s;
+}
+
+.program-card:hover {
+  transform: translateY(-8px);
+}
+
+.program-number {
+  font-size: 3.5rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+}
+
+.program-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  letter-spacing: -.01em;
+}
+
+.program-time {
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--gray-dark);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.program-desc {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--gray-dark);
+}
+
+/* ═══════════════════════════════════════════════════
+   STATS
+═══════════════════════════════════════════════════ */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 4rem;
+  max-width: 1000px;
+  width: 100%;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-number {
+  font-size: clamp(4rem, 8vw, 6rem);
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 1rem;
+  letter-spacing: -.03em;
+}
+
+.stat-label {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════════════
+   DONATION
+═══════════════════════════════════════════════════ */
+.donation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  max-width: 1000px;
+  width: 100%;
+}
+
+.donation-card {
+  background: var(--white);
+  border: 4px solid var(--black);
+}
+
+.donation-header {
+  background: var(--black);
+  color: var(--white);
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.donation-icon {
+  font-size: 3rem;
+}
+
+.donation-title {
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.donation-body {
+  padding: 2rem;
+}
+
+.donation-row {
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 2px solid var(--gray-light);
+}
+
+.donation-row:last-child {
+  border-bottom: none;
+}
+
+.donation-label {
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: var(--gray);
+}
+
+.donation-value {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.copy-btn {
+  padding: .6rem 1.2rem;
+  background: var(--black);
+  color: var(--white);
+  border: none;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.copy-btn:hover {
+  background: var(--primary);
+}
+
+.copy-btn.copied {
+  background: #16A34A;
+}
+
+/* ═══════════════════════════════════════════════════
+   CTA BUTTONS
+═══════════════════════════════════════════════════ */
+.cta-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cta-btn {
+  display: inline-block;
+  padding: 1.2rem 3rem;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all .3s;
+}
+
+.cta-primary {
+  background: var(--white);
+  color: var(--primary);
+  border: 4px solid var(--white);
+}
+
+.cta-primary:hover {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
+}
+
+.cta-secondary {
+  background: transparent;
+  color: var(--white);
+  border: 4px solid var(--white);
+}
+
+.cta-secondary:hover {
+  background: var(--white);
+  color: var(--primary);
+}
+
+/* ═══════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════ */
+footer {
+  background: var(--black);
+  color: var(--white);
+  padding: 4rem 2rem 2rem;
+}
+
+.footer-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.footer-brand {
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+}
+
+.footer-tagline {
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--gray);
+  line-height: 1.6;
+}
+
+.footer-title {
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+}
+
+.footer-links {
+  list-style: none;
+}
+
+.footer-links li {
+  margin-bottom: .8rem;
+}
+
+.footer-links a {
+  font-size: .95rem;
+  color: var(--gray);
+  text-decoration: none;
+  transition: color .2s;
+}
+
+.footer-links a:hover {
+  color: var(--white);
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,.1);
+  padding-top: 2rem;
+  text-align: center;
+  font-size: .85rem;
+  color: var(--gray);
+}
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .donation-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-btn {
+    top: 1.5rem;
+    left: 1.5rem;
+  }
+  
+  .audio-btn {
+    grid-template-columns: 1fr;
+    padding: 2rem;
+    text-align: center;
+    gap: 1.5rem;
+  }
+  
+  .audio-icon-wrap {
+    margin: 0 auto;
+  }
+  
+  .audio-content {
+    text-align: center;
+  }
+  
+  .audio-title {
+    font-size: 2rem;
+  }
+  
+  .audio-play {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+  }
+  
+  .video-toggle {
+    flex-direction: column;
+    padding: 2rem;
+    gap: 1rem;
+  }
+  
+  .program-card {
+    flex: 0 0 300px;
+  }
+  
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .donation-row {
+    grid-template-columns: 1fr;
+    gap: .5rem;
+  }
+  
+  .copy-btn {
+    width: 100%;
+  }
+  
+  .chat-container {
+    height: 500px;
+  }
+  
+  .chat-input-wrap {
+    padding: 1rem 1.5rem;
+  }
+  
+  .chat-send {
+    width: 50px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- MENU BUTTON -->
+<button class="menu-btn" id="menuBtn">
+  <span class="menu-line"></span>
+  <span class="menu-line"></span>
+  <span class="menu-line"></span>
+</button>
+
+<!-- MENU OVERLAY -->
+<div class="menu-overlay" id="menuOverlay">
+  <ul class="menu-nav">
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="#en-vivo">En Vivo</a></li>
+    <li><a href="#programas">Programas</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#ofrenda">Ofrenda</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-label">Ipuc Patio Bonito · Bogotá</div>
+  <h1 class="hero-title">
+    MÁS<br>
+    <em>RADIOPB</em>
+  </h1>
+  <p class="hero-desc">
+    La radio cristiana que transmite fe, esperanza y amor las 24 horas desde Bogotá.
+  </p>
+  <a href="#en-vivo" class="hero-cta">Escuchar Ahora</a>
+</section>
+
+<!-- EN VIVO -->
+<section class="section section-gray" id="en-vivo">
+  <div class="section-header">
+    <div class="section-number">01 — EN VIVO</div>
+    <h2 class="section-title">ESCUCHA<br>AHORA</h2>
+    <p class="section-subtitle">
+      Transmisión continua 24/7 con música cristiana, enseñanza bíblica y programas para toda la familia.
+    </p>
+  </div>
+  
+  <div class="streaming-wrapper">
+    <!-- Big Audio Button -->
+    <button class="audio-btn" id="audioBtn" onclick="toggleAudio()">
+      <div class="audio-icon-wrap">
+        <div class="audio-icon" id="audioIcon">📻</div>
+        <div class="audio-wave" id="audioWave">
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+        </div>
+      </div>
+      <div class="audio-content">
+        <div class="audio-label">Radio en Vivo</div>
+        <div class="audio-title" id="audioTitle">ESCUCHAR +RADIOPB</div>
+        <div class="audio-status" id="audioStatus">Haz clic para reproducir</div>
+      </div>
+      <div class="audio-play" id="audioPlay">▶</div>
+    </button>
+    
+    <!-- Video Toggle -->
+    <input type="checkbox" class="video-checkbox" id="videoCheck" onchange="toggleVideo(this)">
+    <label for="videoCheck" class="video-toggle">
+      <div class="switch"></div>
+      <div class="video-text">
+        <span class="video-icon">📺</span>
+        <span class="video-label">Activar Video en Vivo</span>
+      </div>
+    </label>
+    
+    <!-- Video Player -->
+    <div class="video-player" id="videoPlayer">
+      <div class="video-header">
+        <div class="video-info">
+          <span class="live-badge">🔴 EN VIVO</span>
+          <span class="video-title">Transmisión de Video</span>
+        </div>
+        <button class="close-btn" onclick="closeVideo()">✕</button>
+      </div>
+      <div class="video-embed">
+        <iframe id="videoIframe" src="" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+      </div>
+    </div>
+    
+    <!-- Live Chat -->
+    <div class="chat-container" id="chatContainer">
+      <div class="chat-header">
+        <div class="chat-title">
+          <span class="chat-icon">💬</span>
+          <span>Chat en Vivo</span>
+        </div>
+        <div class="chat-online">
+          <span class="online-dot"></span>
+          <span id="onlineCount">3 conectados</span>
+        </div>
+      </div>
+      
+      <div class="chat-messages" id="chatMessages">
+        <div class="chat-msg system">
+          <span class="msg-text">Bienvenido a +RadioPB. Comparte tu testimonio y bendiciones.</span>
+        </div>
+      </div>
+      
+      <div class="chat-input-wrap">
+  
+  <input 
+    type="text" 
+    class="chat-name"
+    id="chatName"
+    placeholder="Nombre"
+    maxlength="20">
+
+  <input 
+    type="text" 
+    class="chat-input"
+    id="chatInput"
+    placeholder="Escribe tu mensaje..."
+    maxlength="200"
+    onkeydown="if(event.key==='Enter')sendMessage()">
+
+  <button class="chat-send" onclick="sendMessage()">
+    →
+  </button>
+
+</div>
+  </div>
+</section>
+
+<!-- Hidden Audio Element -->
+<audio id="audioElement" preload="none" crossorigin="anonymous"></audio>
+
+<!-- PROGRAMAS -->
+<section class="section section-white" id="programas">
+  <div class="section-header">
+    <div class="section-number">02 — PROGRAMAS</div>
+    <h2 class="section-title">NUESTRA<br>PARRILLA</h2>
+    <p class="section-subtitle">
+      Contenido cristiano de calidad para cada momento del día. Arrastra para ver más →
+    </p>
+  </div>
+  
+  <div class="programs-scroll">
+    <div class="programs-container">
+      <div class="program-card">
+        <div class="program-number">01</div>
+        <div class="program-title">Despierto y Aún Estoy Contigo</div>
+        <div class="program-time">05:00 – 06:00 AM · Lun–Sáb</div>
+        <p class="program-desc">Pastor Rodrigo Muñoz te acompaña cada mañana con reflexiones bíblicas.</p>
+      </div>
+      
+      <div class="program-card">
+        <div class="program-number">02</div>
+        <div class="program-title">El Faro</div>
+        <div class="program-time">08:00 – 09:30 PM · Viernes</div>
+        <p class="program-desc">Programa juvenil con testimonios, música y mensajes para la nueva generación.</p>
+      </div>
+      
+      <div class="program-card">
+        <div class="program-number">03</div>
+        <div class="program-title">Mujer VIP</div>
+        <div class="program-time">09:00 – 10:30 AM · Lun–Vie</div>
+        <p class="program-desc">Dorcas Nacional presenta un espacio para la mujer cristiana.</p>
+      </div>
+      
+      <div class="program-card">
+        <div class="program-number">04</div>
+        <div class="program-title">El Camino de la Salvación</div>
+        <div class="program-time">08:00 – 09:00 PM · Lunes</div>
+        <p class="program-desc">Misiones PB comparte historias de evangelización en Colombia.</p>
+      </div>
+      
+      <div class="program-card">
+        <div class="program-number">05</div>
+        <div class="program-title">Talita Cumi</div>
+        <div class="program-time">04:00 – 05:00 PM · Viernes</div>
+        <p class="program-desc">Jaidin Ortega presenta un programa de inspiración y alabanza.</p>
+      </div>
+      
+      <div class="program-card">
+        <div class="program-number">06</div>
+        <div class="program-title">Conexión Tropical</div>
+        <div class="program-time">10:00 AM – 12:00 PM · Sábados</div>
+        <p class="program-desc">Anyith Estrada con los mejores ritmos tropicales cristianos.</p>
+      </div>
+      
+      <div class="program-card">
+        <div class="program-number">07</div>
+        <div class="program-title">Raíces de Antaño</div>
+        <div class="program-time">07:30 – 09:00 PM · Miércoles</div>
+        <p class="program-desc">Diego Calderón presenta música tradicional cristiana e himnos.</p>
+      </div>
+      
+      <div class="program-card">
+        <div class="program-number">08</div>
+        <div class="program-title">Más Radio PBKids</div>
+        <div class="program-time">03:00 – 04:00 PM · Sábados</div>
+        <p class="program-desc">Escuela Infantil con historias bíblicas y cantos para niños.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NOSOTROS -->
+<section class="section section-terra" id="nosotros">
+  <div class="section-header">
+    <div class="section-number">03 — NOSOTROS</div>
+    <h2 class="section-title">IPUC<br>PATIO BONITO</h2>
+    <p class="section-subtitle">
+      Una comunidad de fe comprometida con llevar el evangelio a través de las ondas radiales desde Bogotá, Colombia.
+    </p>
+  </div>
+  
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-number">24/7</div>
+      <div class="stat-label">Al Aire</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">8+</div>
+      <div class="stat-label">Programas</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">4</div>
+      <div class="stat-label">Misiones</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">10+</div>
+      <div class="stat-label">Años</div>
+    </div>
+  </div>
+</section>
+
+<!-- OFRENDA -->
+<section class="section section-white" id="ofrenda">
+  <div class="section-header">
+    <div class="section-number">04 — OFRENDA</div>
+    <h2 class="section-title">APOYA<br>LA OBRA</h2>
+    <p class="section-subtitle">
+      "Cada uno dé como propuso en su corazón: no con tristeza, ni por necesidad, porque Dios ama al dador alegre." — 2 Corintios 9:7
+    </p>
+  </div>
+  
+  <div class="donation-grid">
+    <!-- Nequi/Daviplata -->
+    <div class="donation-card">
+      <div class="donation-header">
+        <div class="donation-icon">💜</div>
+        <div class="donation-title">NEQUI / DAVIPLATA</div>
+      </div>
+      <div class="donation-body">
+        <div class="donation-row">
+          <span class="donation-label">NEQUI</span>
+          <span class="donation-value">+57 320 333 4162</span>
+          <button class="copy-btn" onclick="copy('+57 320 333 4162',this)">COPIAR</button>
+        </div>
+        <div class="donation-row">
+          <span class="donation-label">DAVIPLATA</span>
+          <span class="donation-value">+57 313 217 0921</span>
+          <button class="copy-btn" onclick="copy('+57 313 217 0921',this)">COPIAR</button>
+        </div>
+        <div class="donation-row">
+          <span class="donation-label">NOMBRE</span>
+          <span class="donation-value">Ipuc Patio Bonito</span>
+          <button class="copy-btn" onclick="copy('Ipuc Patio Bonito',this)">COPIAR</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Bancolombia -->
+    <div class="donation-card">
+      <div class="donation-header">
+        <div class="donation-icon">🏦</div>
+        <div class="donation-title">BANCOLOMBIA</div>
+      </div>
+      <div class="donation-body">
+        <div class="donation-row">
+          <span class="donation-label">TIPO</span>
+          <span class="donation-value">Cuenta de Ahorros</span>
+        </div>
+        <div class="donation-row">
+          <span class="donation-label">CUENTA</span>
+          <span class="donation-value">123 456 789 – 00</span>
+          <button class="copy-btn" onclick="copy('12345678900',this)">COPIAR</button>
+        </div>
+        <div class="donation-row">
+          <span class="donation-label">NOMBRE</span>
+          <span class="donation-value">Ipuc Patio Bonito</span>
+          <button class="copy-btn" onclick="copy('Ipuc Patio Bonito',this)">COPIAR</button>
+        </div>
+        <div class="donation-row">
+          <span class="donation-label">NIT</span>
+          <span class="donation-value">900 123 456 – 7</span>
+          <button class="copy-btn" onclick="copy('9001234567',this)">COPIAR</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="cta-buttons" style="margin-top: 3rem;">
+    <a href="https://wa.me/573203334162?text=Hola,%20quiero%20enviar%20mi%20comprobante%20de%20ofrenda" target="_blank" class="cta-btn cta-primary">
+      📲 ENVIAR COMPROBANTE
+    </a>
+    <a href="/cdn-cgi/l/email-protection#0a676b79786b6e63657a684a6d676b63662469656735797f68606f697e374965677a7865686b647e6f2f383a456c786f646e6b" class="cta-btn cta-secondary" style="background:var(--black);color:var(--white);border-color:var(--black);">
+      ✉️ ENVIAR EMAIL
+    </a>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section section-terra">
+  <h2 class="section-title">ÚNETE A<br>NUESTRA<br>COMUNIDAD</h2>
+  <div class="cta-buttons" style="margin-top: 2rem;">
+    <a href="#en-vivo" class="cta-btn cta-primary">Escuchar Ahora</a>
+    <a href="#contacto" class="cta-btn cta-secondary">Contáctanos</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contacto">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">+RADIOPB</div>
+      <p class="footer-tagline">
+        La radio cristiana de Ipuc Patio Bonito.<br>
+        Transmitiendo fe, esperanza y amor desde Bogotá.
+      </p>
+    </div>
+    
+    <div>
+      <div class="footer-title">Navegación</div>
+      <ul class="footer-links">
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#en-vivo">En Vivo</a></li>
+        <li><a href="#programas">Programas</a></li>
+        <li><a href="#nosotros">Nosotros</a></li>
+      </ul>
+    </div>
+    
+    <div>
+      <div class="footer-title">Recursos</div>
+      <ul class="footer-links">
+        <li><a href="https://www.youtube.com/@masradiopb7493" target="_blank">YouTube</a></li>
+        <li><a href="https://ipucpatiobonito.com/galeria.html">Galería</a></li>
+        <li><a href="https://ipucpatiobonito.com/masradiopb.apk">App Android</a></li>
+        <li><a href="https://ipucpatiobonito.com/chatradio.html">Chat Radio</a></li>
+      </ul>
+    </div>
+    
+    <div>
+      <div class="footer-title">Contacto</div>
+      <ul class="footer-links">
+        <li><a href="/cdn-cgi/l/email-protection#d3beb2a0a1b2b7babca3b193b4beb2babffdb0bcbe"><span class="__cf_email__" data-cfemail="d0bdb1a3a2b1b4b9bfa0b290b7bdb1b9bcfeb3bfbd">[email&#160;protected]</span></a></li>
+        <li><a href="tel:+573203334162">+57 320 333 4162</a></li>
+        <li><a href="#">Cra. 88 #38-20 Sur</a></li>
+        <li><a href="#">Bogotá, Colombia</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="footer-bottom">
+    © 2025 IPUC Patio Bonito · Todos los derechos reservados
+  </div>
+</footer>
+
+<script>
+// Menu Toggle
+const menuBtn = document.getElementById('menuBtn');
+const menuOverlay = document.getElementById('menuOverlay');
+
+menuBtn.addEventListener('click', () => {
+  menuBtn.classList.toggle('open');
+  menuOverlay.classList.toggle('open');
+});
+
+document.querySelectorAll('.menu-nav a').forEach(link => {
+  link.addEventListener('click', () => {
+    menuBtn.classList.remove('open');
+    menuOverlay.classList.remove('open');
+  });
+});
+
+// STREAMING
+const AUDIO_URL = 'https://stream.zeno.fm/your-radio-stream'; // REPLACE WITH YOUR STREAM
+const VIDEO_URL = 'https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=0&controls=1'; // REPLACE WITH YOUR YOUTUBE LIVE
+
+let audioPlaying = false;
+
+function toggleAudio() {
+  const btn = document.getElementById('audioBtn');
+  const title = document.getElementById('audioTitle');
+  const status = document.getElementById('audioStatus');
+  const play = document.getElementById('audioPlay');
+  const audio = document.getElementById('audioElement');
+  
+  audioPlaying = !audioPlaying;
+  
+  if (audioPlaying) {
+    btn.classList.add('active');
+    title.textContent = '+RADIOPB EN VIVO';
+    status.textContent = '🔴 Transmitiendo desde Bogotá';
+    play.textContent = '⏸';
+    
+    audio.src = AUDIO_URL;
+    audio.play().catch(e => {
+      console.log('Audio error:', e);
+      setTimeout(() => audio.play(), 500);
+    });
+    
+    // Show welcome message in chat
+    addSystemMessage('📻 Radio iniciada. ¡Bienvenido a +RadioPB!');
+  } else {
+    btn.classList.remove('active');
+    title.textContent = 'ESCUCHAR +RADIOPB';
+    status.textContent = 'Haz clic para reproducir';
+    play.textContent = '▶';
+    
+    audio.pause();
+    audio.currentTime = 0;
+  }
+}
+
+function toggleVideo(checkbox) {
+  const player = document.getElementById('videoPlayer');
+  const iframe = document.getElementById('videoIframe');
+  const audio = document.getElementById('audioElement');
+  const btn = document.getElementById('audioBtn');
+  const title = document.getElementById('audioTitle');
+  const status = document.getElementById('audioStatus');
+  const play = document.getElementById('audioPlay');
+  
+  if (checkbox.checked) {
+    player.classList.add('active');
+    iframe.src = VIDEO_URL;
+    
+    // *** STOP AUDIO IF PLAYING ***
+    if (audioPlaying) {
+      audio.pause();
+      audio.currentTime = 0;
+      audio.src = ''; // Clear source
+      btn.classList.remove('active');
+      title.textContent = 'ESCUCHAR +RADIOPB';
+      status.textContent = 'Haz clic para reproducir';
+      play.textContent = '▶';
+      audioPlaying = false;
+      
+      // Notify in chat
+      addSystemMessage('📺 Cambiado a streaming de video.');
+    } else {
+      addSystemMessage('📺 Video iniciado.');
+    }
+    
+    setTimeout(() => {
+      player.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+  } else {
+    player.classList.remove('active');
+    setTimeout(() => iframe.src = '', 400);
+  }
+}
+
+function closeVideo() {
+  const checkbox = document.getElementById('videoCheck');
+  const player = document.getElementById('videoPlayer');
+  const iframe = document.getElementById('videoIframe');
+  
+  checkbox.checked = false;
+  player.classList.remove('active');
+  setTimeout(() => iframe.src = '', 400);
+}
+
+// ═══════════════════════════════════════════════════
+// CHAT FUNCTIONALITY
+// ═══════════════════════════════════════════════════
+
+function addSystemMessage(text) {
+  const messagesContainer = document.getElementById('chatMessages');
+  
+  const msgDiv = document.createElement('div');
+  msgDiv.className = 'chat-msg system';
+  msgDiv.innerHTML = `
+    <span class="msg-icon">✝️</span>
+    <span class="msg-text">${text}</span>
+  `;
+  
+  messagesContainer.appendChild(msgDiv);
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+
+
+// Copy to clipboard
+function copy(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✓ COPIADO';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = orig;
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+
+<!-- FIREBASE CHAT -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { 
+  getDatabase, 
+  ref, 
+  push, 
+  onChildAdded, 
+  query, 
+  limitToLast
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCpAGuzIF0Rs__ew8gl6hmJ_BCnSQGA1EM",
+  authDomain: "chat-radiopb.firebaseapp.com",
+  databaseURL: "https://chat-radiopb-default-rtdb.firebaseio.com",
+  projectId: "chat-radiopb",
+  storageBucket: "chat-radiopb.firebasestorage.app",
+  messagingSenderId: "904642345701",
+  appId: "1:904642345701:web:99f1614562a0ceaf44720c"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const chatRef = ref(db, "chat");
+
+const chatMessages = document.getElementById("chatMessages");
+const chatInput = document.getElementById("chatInput");
+const chatName = document.getElementById("chatName");
+
+/* =========================
+   GUARDAR NOMBRE LOCAL
+========================= */
+if(localStorage.getItem("radioName")){
+  chatName.value = localStorage.getItem("radioName");
+}
+
+chatName.addEventListener("change", () => {
+  localStorage.setItem("radioName", chatName.value);
+});
+
+/* =========================
+   ENVIAR MENSAJE
+========================= */
+window.sendMessage = function() {
+
+  const text = chatInput.value.trim();
+  const name = chatName.value.trim();
+
+  if (!name) {
+    alert("Escribe tu nombre primero");
+    return;
+  }
+
+  if (!text) return;
+
+  push(chatRef, {
+    user: name,
+    text: text,
+    timestamp: Date.now()
+  });
+
+  chatInput.value = "";
+};
+
+/* =========================
+   RECIBIR MENSAJES
+========================= */
+const chatQuery = query(chatRef, limitToLast(100));
+
+onChildAdded(chatQuery, (snapshot) => {
+  const msg = snapshot.val();
+
+  const div = document.createElement("div");
+  div.classList.add("chat-msg");
+
+  div.innerHTML = `
+    <div class="msg-content">
+      <div class="msg-name">${escapeHtml(msg.user)}</div>
+      <div class="msg-text">${escapeHtml(msg.text)}</div>
+    </div>
+  `;
+
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+});
+
+/* =========================
+   ESCAPE HTML
+========================= */
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+</script>
+</body>
+</html>
