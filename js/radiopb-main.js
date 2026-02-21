@@ -62,7 +62,7 @@ document.querySelectorAll('.menu-nav a').forEach(link => {
 });
 
 // STREAMING
-const AUDIO_URL = 'https://radiolatina.info/8076/stream'; // REPLACE WITH YOUR STREAM
+const AUDIO_URL = '/api/stream';
 const VIDEO_URL = 'https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=0&controls=1'; // REPLACE WITH YOUR YOUTUBE LIVE
 
 let audioPlaying = false;
