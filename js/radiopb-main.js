@@ -101,63 +101,80 @@ function toggleAudio() {
   }
 }
 
+// Esta función ayuda a limpiar el link sin importar cómo lo pegues en el Excel
+function extraerID(url) {
+    if (!url) return null;
+    // Si es un link largo (watch?v=...)
+    if (url.includes('v=')) return url.split('v=')[1].split('&')[0];
+    // Si es un link de directo (live/...)
+    if (url.includes('live/')) return url.split('live/')[1].split('?')[0];
+    // Si es un link corto (youtu.be/...)
+    if (url.includes('youtu.be/')) return url.split('.be/')[1].split('?')[0];
+    // Si ya es solo el ID, lo devuelve tal cual
+    return url.trim();
+}
+
 async function toggleVideo(checkbox) {
-  const player = document.getElementById('videoPlayer');
-  const iframe = document.getElementById('videoIframe');
-  const audio = document.getElementById('audioElement');
-  const btn = document.getElementById('audioBtn');
-  const title = document.getElementById('audioTitle');
-  const status = document.getElementById('audioStatus');
-  const play = document.getElementById('audioPlay');
+    const player = document.getElementById('videoPlayer');
+    const iframe = document.getElementById('videoIframe');
+    const audio = document.getElementById('audioElement');
+    const btn = document.getElementById('audioBtn');
+    const title = document.getElementById('audioTitle');
+    const status = document.getElementById('audioStatus');
+    const play = document.getElementById('audioPlay');
 
-  if (checkbox.checked) {
-    player.classList.add('active');
-    
-    try {
-      // Intentamos leer el ID desde Google Sheets
-      const response = await fetch(SHEET_CSV_URL);
-      const text = await response.text();
-      
-      // Separamos el texto por líneas y tomamos la segunda (donde está el ID)
-      const rows = text.split('\n');
-      const idActual = rows[1]?.trim(); 
+    if (checkbox.checked) {
+        player.classList.add('active');
+        
+        try {
+            // 1. Pedimos los datos a la hoja de Google
+            const response = await fetch(SHEET_CSV_URL);
+            const text = await response.text();
+            
+            // 2. Procesamos el texto de la hoja
+            const rows = text.split('\n');
+            const contenidoCelda = rows[1]?.trim(); 
+            
+            // 3. Limpiamos el contenido por si pegaste el link completo
+            const idActual = extraerID(contenidoCelda);
 
-      if (idActual) {
-        iframe.src = `https://www.youtube.com/embed/${idActual}?autoplay=1&mute=0&controls=1`;
-        console.log("Cargado desde Google Sheets:", idActual);
-      } else {
-        throw new Error("ID no encontrado en la hoja");
-      }
-    } catch (error) {
-      console.warn("Fallo al leer Sheets, usando canal por defecto:", error);
-      // Respaldo: Si falla la hoja, intenta cargar el en vivo general del canal
-      iframe.src = `https://www.youtube.com/embed/live_stream?channel=UCAvUKBmVQEzKT0vXH6pu4Dg&autoplay=1`;
-    }
+            if (idActual) {
+                iframe.src = `https://www.youtube.com/embed/${idActual}?autoplay=1&mute=0&controls=1`;
+                console.log("Cargado con éxito:", idActual);
+            } else {
+                throw new Error("Celda vacía");
+            }
 
-    // *** LÓGICA DE PAUSA DE AUDIO (Tu código original) ***
-    if (typeof audioPlaying !== 'undefined' && audioPlaying) {
-      audio.pause();
-      audio.currentTime = 0;
-      audio.src = ''; 
-      btn.classList.remove('active');
-      title.textContent = 'ESCUCHAR +RADIOPB';
-      status.textContent = 'Haz clic para reproducir';
-      play.textContent = '▶';
-      audioPlaying = false;
-      addSystemMessage('📺 Cambiado a streaming de video.');
+        } catch (error) {
+            console.warn("Fallo lectura de Sheets, usando respaldo:", error);
+            // Respaldo automático si falla el Excel
+            iframe.src = `https://www.youtube.com/embed/live_stream?channel=UCAvUKBmVQEzKT0vXH6pu4Dg&autoplay=1`;
+        }
+
+        // *** LÓGICA DE PAUSA DE AUDIO ***
+        if (typeof audioPlaying !== 'undefined' && audioPlaying) {
+            audio.pause();
+            audio.currentTime = 0;
+            audio.src = ''; 
+            btn.classList.remove('active');
+            title.textContent = 'ESCUCHAR +RADIOPB';
+            status.textContent = 'Haz clic para reproducir';
+            play.textContent = '▶';
+            audioPlaying = false;
+            addSystemMessage('📺 Cambiado a streaming de video.');
+        } else {
+            addSystemMessage('📺 Video iniciado.');
+        }
+
+        setTimeout(() => {
+            player.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+
     } else {
-      addSystemMessage('📺 Video iniciado.');
+        player.classList.remove('active');
+        // Limpiamos el iframe al apagar para que no siga consumiendo datos
+        setTimeout(() => iframe.src = '', 400);
     }
-
-    setTimeout(() => {
-      player.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 100);
-
-  } else {
-    player.classList.remove('active');
-    // Limpiamos el iframe para detener el video
-    setTimeout(() => iframe.src = '', 400);
-  }
 }
 
 function closeVideo() {
