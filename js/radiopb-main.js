@@ -63,7 +63,7 @@ document.querySelectorAll('.menu-nav a').forEach(link => {
 
 // STREAMING
 const AUDIO_URL = 'https://stream-proxy.sebatan4.workers.dev';
-const VIDEO_URL = 'https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=0&controls=1'; // REPLACE WITH YOUR YOUTUBE LIVE
+const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT0eko68LCU9ZrXD2HxEV1EkC1T5Hxd2LAWB4eNZ8FHkgWTuhx75V9YACSQT34JGMgMUv6GvlEtow2S/pub?output=csv'; // REPLACE WITH YOUR YOUTUBE LIVE
 
 let audioPlaying = false;
 
@@ -101,7 +101,7 @@ function toggleAudio() {
   }
 }
 
-function toggleVideo(checkbox) {
+async function toggleVideo(checkbox) {
   const player = document.getElementById('videoPlayer');
   const iframe = document.getElementById('videoIframe');
   const audio = document.getElementById('audioElement');
@@ -109,33 +109,53 @@ function toggleVideo(checkbox) {
   const title = document.getElementById('audioTitle');
   const status = document.getElementById('audioStatus');
   const play = document.getElementById('audioPlay');
-  
+
   if (checkbox.checked) {
     player.classList.add('active');
-    iframe.src = VIDEO_URL;
     
-    // *** STOP AUDIO IF PLAYING ***
-    if (audioPlaying) {
+    try {
+      // Intentamos leer el ID desde Google Sheets
+      const response = await fetch(SHEET_CSV_URL);
+      const text = await response.text();
+      
+      // Separamos el texto por líneas y tomamos la segunda (donde está el ID)
+      const rows = text.split('\n');
+      const idActual = rows[1]?.trim(); 
+
+      if (idActual) {
+        iframe.src = `https://www.youtube.com/embed/${idActual}?autoplay=1&mute=0&controls=1`;
+        console.log("Cargado desde Google Sheets:", idActual);
+      } else {
+        throw new Error("ID no encontrado en la hoja");
+      }
+    } catch (error) {
+      console.warn("Fallo al leer Sheets, usando canal por defecto:", error);
+      // Respaldo: Si falla la hoja, intenta cargar el en vivo general del canal
+      iframe.src = `https://www.youtube.com/embed/live_stream?channel=UCAvUKBmVQEzKT0vXH6pu4Dg&autoplay=1`;
+    }
+
+    // *** LÓGICA DE PAUSA DE AUDIO (Tu código original) ***
+    if (typeof audioPlaying !== 'undefined' && audioPlaying) {
       audio.pause();
       audio.currentTime = 0;
-      audio.src = ''; // Clear source
+      audio.src = ''; 
       btn.classList.remove('active');
       title.textContent = 'ESCUCHAR +RADIOPB';
       status.textContent = 'Haz clic para reproducir';
       play.textContent = '▶';
       audioPlaying = false;
-      
-      // Notify in chat
       addSystemMessage('📺 Cambiado a streaming de video.');
     } else {
       addSystemMessage('📺 Video iniciado.');
     }
-    
+
     setTimeout(() => {
       player.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }, 100);
+
   } else {
     player.classList.remove('active');
+    // Limpiamos el iframe para detener el video
     setTimeout(() => iframe.src = '', 400);
   }
 }
