@@ -80,7 +80,7 @@ function toggleAudio() {
     btn.classList.add('active');
     title.textContent = '+RADIOPB EN VIVO';
     status.textContent = '🔴 Transmitiendo desde Bogotá';
-    play.textContent = '⏸';
+    play.textContent = '';
     
     audio.src = AUDIO_URL;
     audio.play().catch(e => {
