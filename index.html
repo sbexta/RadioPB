@@ -58,7 +58,9 @@
       <!-- Big Audio Button -->
       <button class="audio-btn" id="audioBtn" onclick="toggleAudio()">
         <div class="audio-icon-wrap">
-          <div class="audio-icon" id="audioIcon">📻</div>
+          <div class="audio-icon" id="audioIcon">
+  <i data-lucide="radio"></i>
+</div>
           <div class="audio-wave" id="audioWave">
             <div class="wave-bar"></div>
             <div class="wave-bar"></div>
@@ -80,7 +82,9 @@
       <label for="videoCheck" class="video-toggle">
         <div class="switch"></div>
         <div class="video-text">
-          <span class="video-icon">📺</span>
+          <span class="video-icon">
+  <i data-lucide="monitor-play"></i>
+</span>
           <span class="video-label">Activar Video en Vivo</span>
         </div>
       </label>
@@ -89,7 +93,9 @@
       <div class="video-player" id="videoPlayer">
         <div class="video-header">
           <div class="video-info">
-            <span class="live-badge">🔴 EN VIVO</span>
+            <span class="live-badge">
+  <i data-lucide="circle"></i> EN VIVO
+</span>
             <span class="video-title">Transmisión de Video</span>
           </div>
           <button class="close-btn" onclick="closeVideo()">✕</button>
@@ -103,7 +109,9 @@
       <div class="chat-container" id="chatContainer">
         <div class="chat-header">
           <div class="chat-title">
-            <span class="chat-icon">💬</span>
+            <span class="chat-icon">
+  <i data-lucide="message-circle"></i>
+</span>
             <span>Chat en Vivo</span>
           </div>
         </div>
@@ -246,7 +254,9 @@
       <!-- Nequi/Daviplata -->
       <div class="donation-card">
         <div class="donation-header">
-          <div class="donation-icon">💜</div>
+          <div class="donation-icon">
+  <i data-lucide="heart"></i>
+</div>
           <div class="donation-title">NEQUI / DAVIPLATA</div>
         </div>
         <div class="donation-body">
@@ -271,7 +281,9 @@
       <!-- Bancolombia -->
       <div class="donation-card">
         <div class="donation-header">
-          <div class="donation-icon">🏦</div>
+          <div class="donation-icon">
+  <i data-lucide="building-2"></i>
+</div>
           <div class="donation-title">BANCOLOMBIA</div>
         </div>
         <div class="donation-body">
@@ -352,6 +364,8 @@
   <!-- FIREBASE CHAT -->
   <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
   <script src="js/radiopb-chat.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>lucide.createIcons();</script>
 </body>
 
 </html>

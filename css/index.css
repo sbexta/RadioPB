@@ -15,7 +15,7 @@
   /* System colors */
   --black: #0B1014;
   --white: #FAFAFA;
-  --gray-light: #E5E5E5;
+  --gray-light: #2E3E4B;
   --gray: #999;
   --gray-dark: #666;
   
@@ -213,7 +213,7 @@ body {
 
 .section-gray {
   background: var(--gray-light);
-  color: var(--black);
+  color: #f4f4f4;
 }
 
 .section-terra {
@@ -1198,4 +1198,37 @@ footer {
   .chat-send {
     width: 50px;
   }
+}
+
+/*icons*/
+
+.live-badge svg {
+  width: 12px;
+  height: 12px;
+  fill: red;
+  stroke: red;
+}
+
+.audio-icon svg,
+.video-icon svg,
+.chat-icon svg,
+.donation-icon svg {
+  width: 48px;
+  height: 48px;
+  stroke-width: 2;
+}
+
+.chat-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.video-icon svg {
+  width: 36px;
+  height: 36px;
+}
+
+.donation-icon svg {
+  width: 40px;
+  height: 40px;
 }
