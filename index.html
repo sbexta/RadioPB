@@ -1,381 +1,357 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>+RadioPB — Radio Cristiana de Bogotá</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="../css/index.css"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>+RadioPB — Radio Cristiana de Bogotá</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../css/index.css" />
 </head>
+
 <body>
 
-<!-- MENU BUTTON -->
-<button class="menu-btn" id="menuBtn">
-  <span class="menu-line"></span>
-  <span class="menu-line"></span>
-  <span class="menu-line"></span>
-</button>
-
-<!-- MENU OVERLAY -->
-<div class="menu-overlay" id="menuOverlay">
-  <ul class="menu-nav">
-    <li><a href="#inicio">Inicio</a></li>
-    <li><a href="#en-vivo">En Vivo</a></li>
-    <li><a href="#programas">Programas</a></li>
-    <li><a href="#nosotros">Nosotros</a></li>
-    <li><a href="#ofrenda">Ofrenda</a></li>
-    <li><a href="#contacto">Contacto</a></li>
-  </ul>
-</div>
-
-<!-- HERO -->
-<section class="hero" id="inicio">
-  <div class="hero-label">Ipuc Patio Bonito · Bogotá</div>
-  <h1 class="hero-title">
-    MÁS<br>
-    <em>RADIOPB</em>
-  </h1>
-  <p class="hero-desc">
-    La radio cristiana que transmite fe, esperanza y amor las 24 horas desde Bogotá.
-  </p>
-  <a href="#en-vivo" class="hero-cta">Escuchar Ahora</a>
-</section>
-
-<!-- EN VIVO -->
-<section class="section section-gray" id="en-vivo">
-  <div class="section-header">
-    <div class="section-number">01 — EN VIVO</div>
-    <h2 class="section-title">ESCUCHA<br>AHORA</h2>
-    <p class="section-subtitle">
-      Transmisión continua 24/7 con música cristiana, enseñanza bíblica y programas para toda la familia.
-    </p>
-  </div>
-  
-  <div class="streaming-wrapper">
-    <!-- Big Audio Button -->
-    <button class="audio-btn" id="audioBtn" onclick="toggleAudio()">
-      <div class="audio-icon-wrap">
-        <div class="audio-icon" id="audioIcon">📻</div>
-        <div class="audio-wave" id="audioWave">
-          <div class="wave-bar"></div>
-          <div class="wave-bar"></div>
-          <div class="wave-bar"></div>
-          <div class="wave-bar"></div>
-          <div class="wave-bar"></div>
-        </div>
-      </div>
-      <div class="audio-content">
-        <div class="audio-label">Radio en Vivo</div>
-        <div class="audio-title" id="audioTitle">ESCUCHAR +RADIOPB</div>
-        <div class="audio-status" id="audioStatus">Haz clic para reproducir</div>
-      </div>
-      <div class="audio-play" id="audioPlay">▶</div>
-    </button>
-    
-    <!-- Video Toggle -->
-    <input type="checkbox" class="video-checkbox" id="videoCheck" onchange="toggleVideo(this)">
-    <label for="videoCheck" class="video-toggle">
-      <div class="switch"></div>
-      <div class="video-text">
-        <span class="video-icon">📺</span>
-        <span class="video-label">Activar Video en Vivo</span>
-      </div>
-    </label>
-    
-    <!-- Video Player -->
-    <div class="video-player" id="videoPlayer">
-      <div class="video-header">
-        <div class="video-info">
-          <span class="live-badge">🔴 EN VIVO</span>
-          <span class="video-title">Transmisión de Video</span>
-        </div>
-        <button class="close-btn" onclick="closeVideo()">✕</button>
-      </div>
-      <div class="video-embed">
-        <iframe id="videoIframe" src="" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
-      </div>
-    </div>
-    
-    <!-- Live Chat -->
-    <div class="chat-container" id="chatContainer">
-      <div class="chat-header">
-        <div class="chat-title">
-          <span class="chat-icon">💬</span>
-          <span>Chat en Vivo</span>
-        </div>
-      </div>
-      
-      <div class="chat-messages" id="chatMessages">
-        <div class="chat-msg system">
-          <span class="msg-text">Bienvenido a +RadioPB. Comparte tu testimonio y bendiciones.</span>
-        </div>
-      </div>
-      
-      <div class="chat-input-wrap">
-  
-  <input 
-    type="text" 
-    class="chat-name"
-    id="chatName"
-    placeholder="Nombre"
-    maxlength="20">
-
-  <input 
-    type="text" 
-    class="chat-input"
-    id="chatInput"
-    placeholder="Escribe tu mensaje..."
-    maxlength="200"
-    onkeydown="if(event.key==='Enter')sendMessage()">
-
-  <button class="chat-send" onclick="sendMessage()">
-    →
+  <!-- MENU BUTTON -->
+  <button class="menu-btn" id="menuBtn">
+    <span class="menu-line"></span>
+    <span class="menu-line"></span>
+    <span class="menu-line"></span>
   </button>
 
-</div>
+  <!-- MENU OVERLAY -->
+  <div class="menu-overlay" id="menuOverlay">
+    <ul class="menu-nav">
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#en-vivo">En Vivo</a></li>
+      <li><a href="#programas">Programas</a></li>
+      <li><a href="#nosotros">Nosotros</a></li>
+      <li><a href="#ofrenda">Ofrenda</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
   </div>
-</section>
 
-<!-- Hidden Audio Element -->
-<audio id="audioElement" preload="none" crossorigin="anonymous"></audio>
-
-<!-- PROGRAMAS -->
-<section class="section section-white" id="programas">
-  <div class="section-header">
-    <div class="section-number">02 — PROGRAMAS</div>
-    <h2 class="section-title">NUESTRA<br>PARRILLA</h2>
-    <p class="section-subtitle">
-      Contenido cristiano de calidad para cada momento del día. Arrastra para ver más →
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="hero-label">Ipuc Patio Bonito · Bogotá</div>
+    <h1 class="hero-title">
+      MÁS<br>
+      <em>RADIOPB</em>
+    </h1>
+    <p class="hero-desc">
+      La radio cristiana que transmite fe, esperanza y amor las 24 horas desde Bogotá.
     </p>
-  </div>
-  
-  <div class="programs-scroll">
-    <div class="programs-container">
-      <div class="program-card">
-        <div class="program-number">01</div>
-        <div class="program-title">Despierto y Aún Estoy Contigo</div>
-        <div class="program-time">05:00 – 06:00 AM · Lun–Sáb</div>
-        <p class="program-desc">Pastor Rodrigo Muñoz te acompaña cada mañana con reflexiones bíblicas.</p>
+    <a href="#en-vivo" class="hero-cta">Escuchar Ahora</a>
+  </section>
+
+  <!-- EN VIVO -->
+  <section class="section section-gray" id="en-vivo">
+    <div class="section-header">
+      <div class="section-number">01 — EN VIVO</div>
+      <h2 class="section-title">ESCUCHA<br>AHORA</h2>
+      <p class="section-subtitle">
+        Transmisión continua 24/7 con música cristiana, enseñanza bíblica y programas para toda la familia.
+      </p>
+    </div>
+
+    <div class="streaming-wrapper">
+      <!-- Big Audio Button -->
+      <button class="audio-btn" id="audioBtn" onclick="toggleAudio()">
+        <div class="audio-icon-wrap">
+          <div class="audio-icon" id="audioIcon">📻</div>
+          <div class="audio-wave" id="audioWave">
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+          </div>
+        </div>
+        <div class="audio-content">
+          <div class="audio-label">Radio en Vivo</div>
+          <div class="audio-title" id="audioTitle">ESCUCHAR +RADIOPB</div>
+          <div class="audio-status" id="audioStatus">Haz clic para reproducir</div>
+        </div>
+        <div class="audio-play" id="audioPlay"></div>
+      </button>
+
+      <!-- Video Toggle -->
+      <input type="checkbox" class="video-checkbox" id="videoCheck" onchange="toggleVideo(this)">
+      <label for="videoCheck" class="video-toggle">
+        <div class="switch"></div>
+        <div class="video-text">
+          <span class="video-icon">📺</span>
+          <span class="video-label">Activar Video en Vivo</span>
+        </div>
+      </label>
+
+      <!-- Video Player -->
+      <div class="video-player" id="videoPlayer">
+        <div class="video-header">
+          <div class="video-info">
+            <span class="live-badge">🔴 EN VIVO</span>
+            <span class="video-title">Transmisión de Video</span>
+          </div>
+          <button class="close-btn" onclick="closeVideo()">✕</button>
+        </div>
+        <div class="video-embed">
+          <iframe id="videoIframe" src="" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+        </div>
       </div>
-      
-      <div class="program-card">
-        <div class="program-number">02</div>
-        <div class="program-title">El Faro</div>
-        <div class="program-time">08:00 – 09:30 PM · Viernes</div>
-        <p class="program-desc">Programa juvenil con testimonios, música y mensajes para la nueva generación.</p>
+
+      <!-- Live Chat -->
+      <div class="chat-container" id="chatContainer">
+        <div class="chat-header">
+          <div class="chat-title">
+            <span class="chat-icon">💬</span>
+            <span>Chat en Vivo</span>
+          </div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+          <div class="chat-msg system">
+            <span class="msg-text">Bienvenido a +RadioPB. Comparte tu testimonio y bendiciones.</span>
+          </div>
+        </div>
+
+        <div class="chat-input-wrap">
+
+          <input type="text" class="chat-name" id="chatName" placeholder="Nombre" maxlength="20">
+
+          <input type="text" class="chat-input" id="chatInput" placeholder="Escribe tu mensaje..." maxlength="200"
+            onkeydown="if(event.key==='Enter')sendMessage()">
+
+          <button class="chat-send" onclick="sendMessage()">
+            →
+          </button>
+
+        </div>
       </div>
-      
-      <div class="program-card">
-        <div class="program-number">03</div>
-        <div class="program-title">Mujer VIP</div>
-        <div class="program-time">09:00 – 10:30 AM · Lun–Vie</div>
-        <p class="program-desc">Dorcas Nacional presenta un espacio para la mujer cristiana.</p>
-      </div>
-      
-      <div class="program-card">
-        <div class="program-number">04</div>
-        <div class="program-title">El Camino de la Salvación</div>
-        <div class="program-time">08:00 – 09:00 PM · Lunes</div>
-        <p class="program-desc">Misiones PB comparte historias de evangelización en Colombia.</p>
-      </div>
-      
-      <div class="program-card">
-        <div class="program-number">05</div>
-        <div class="program-title">Talita Cumi</div>
-        <div class="program-time">04:00 – 05:00 PM · Viernes</div>
-        <p class="program-desc">Jaidin Ortega presenta un programa de inspiración y alabanza.</p>
-      </div>
-      
-      <div class="program-card">
-        <div class="program-number">06</div>
-        <div class="program-title">Conexión Tropical</div>
-        <div class="program-time">10:00 AM – 12:00 PM · Sábados</div>
-        <p class="program-desc">Anyith Estrada con los mejores ritmos tropicales cristianos.</p>
-      </div>
-      
-      <div class="program-card">
+  </section>
+
+  <!-- Hidden Audio Element -->
+  <audio id="audioElement" preload="none" crossorigin="anonymous"></audio>
+
+  <!-- PROGRAMAS -->
+  <section class="section section-white" id="programas">
+    <div class="section-header">
+      <div class="section-number">02 — PROGRAMAS</div>
+      <h2 class="section-title">NUESTRA<br>PARRILLA</h2>
+      <p class="section-subtitle">
+        Contenido cristiano de calidad para cada momento del día. Arrastra para ver más →
+      </p>
+    </div>
+
+    <div class="programs-scroll">
+      <div class="programs-container">
+        <div class="program-card">
+          <div class="program-number">Lunes</div>
+          <!-- <div class="program-title">Despierto y Aún Estoy Contigo</div> -->
+          <div class="program-time">05:00 – 06:00 AM · Despierto y Aún Estoy Contigo</div>
+          <div class="program-time">05:00 – 07:00 PM · Señal abierta</div>
+          <div class="program-time">07:00 – 09:00 PM · Portavoz</div>
+          <!-- <p class="program-desc">Pastor Rodrigo Muñoz te acompaña cada mañana con reflexiones bíblicas.</p> -->
+        </div>
+
+        <div class="program-card">
+          <div class="program-number">Martes</div>
+          <div class="program-time">05:00 – 06:00 AM · DESPIERTO Y AUN ESTOY CONTIGO</div>
+          <div class="program-time">05:00 – 07:00 PM · PUNTO FIRME</div>
+        </div>
+
+        <div class="program-card">
+          <div class="program-number">Miercoles</div>
+          <div class="program-time">05:00 – 06:00 AM · DESPIERTO Y AUN ESTOY CONTIGO</div>
+          <div class="program-time">05:00 – 07:00 PM · LA PLAYLIST</div>
+          <div class="program-time">09:00 – 09:00 PM · ELLOS Y ELLAS</div>
+          <div class="program-time">07:00 – 09:00 PM · CASA ABIERTA</div>
+        </div>
+
+        <div class="program-card">
+          <div class="program-number">Jueves</div>
+          <div class="program-time">05:00 – 06:00 AM · DESPIERTO Y AUN ESTOY CONTIGO</div>
+          <div class="program-time">05:00 – 07:00 PM · ALTAR VIVO</div>
+          <div class="program-time">05:00 – 07:00 PM · EN GUARDIA</div>
+        </div>
+
+        <div class="program-card">
+          <div class="program-number">Viernes</div>
+          <div class="program-time">05:00 – 06:00 AM · DESPIERTO Y AUN ESTOY CONTIGO</div>
+          <div class="program-time">05:00 – 07:00 PM · LA PLAYLIST</div>
+          <div class="program-time">07:00 – 09:00 PM · PB WORSHIP</div>
+          <div class="program-time">07:00 – 09:00 PM · THE CREW</div>
+        </div>
+
+        <div class="program-card">
+          <div class="program-number">Sábado</div>
+          <div class="program-time">9:00 – 11:00 AM · AÑOS CON SENTIDO</div>
+          <div class="program-time">9:00 – 11:00 AM · PAN Y VIDA</div>
+          <div class="program-time">11:00 – 01:00 PM · ENTRE CHICAS, ELLAS HABLAN</div>
+          <div class="program-time">01:00 – 03:00 PM · ZONA KIDS</div>
+          <div class="program-time">01:00 – 03:00 PM · MÁS QUE PALABRAS</div>
+        </div>
+
+        <!-- <div class="program-card">
         <div class="program-number">07</div>
         <div class="program-title">Raíces de Antaño</div>
         <div class="program-time">07:30 – 09:00 PM · Miércoles</div>
         <p class="program-desc">Diego Calderón presenta música tradicional cristiana e himnos.</p>
-      </div>
-      
-      <div class="program-card">
-        <div class="program-number">08</div>
-        <div class="program-title">Más Radio PBKids</div>
-        <div class="program-time">03:00 – 04:00 PM · Sábados</div>
-        <p class="program-desc">Escuela Infantil con historias bíblicas y cantos para niños.</p>
+      </div> -->
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- NOSOTROS -->
-<section class="section section-terra" id="nosotros">
-  <div class="section-header">
-    <div class="section-number">03 — NOSOTROS</div>
-    <h2 class="section-title">IPUC<br>PATIO BONITO</h2>
-    <p class="section-subtitle">
-      Una comunidad de fe comprometida con llevar el evangelio a través de las ondas radiales desde Bogotá, Colombia.
-    </p>
-  </div>
-  
-  <div class="stats">
-    <div class="stat">
-      <div class="stat-number">24/7</div>
-      <div class="stat-label">Al Aire</div>
-    </div>
-    <div class="stat">
-      <div class="stat-number">8+</div>
-      <div class="stat-label">Programas</div>
-    </div>
-    <div class="stat">
-      <div class="stat-number">4</div>
-      <div class="stat-label">Misiones</div>
-    </div>
-    <div class="stat">
-      <div class="stat-number">10+</div>
-      <div class="stat-label">Años</div>
-    </div>
-  </div>
-</section>
-
-<!-- OFRENDA -->
-<section class="section section-white" id="ofrenda">
-  <div class="section-header">
-    <div class="section-number">04 — OFRENDA</div>
-    <h2 class="section-title">APOYA<br>LA OBRA</h2>
-    <p class="section-subtitle">
-      "Cada uno dé como propuso en su corazón: no con tristeza, ni por necesidad, porque Dios ama al dador alegre." — 2 Corintios 9:7
-    </p>
-  </div>
-  
-  <div class="donation-grid">
-    <!-- Nequi/Daviplata -->
-    <div class="donation-card">
-      <div class="donation-header">
-        <div class="donation-icon">💜</div>
-        <div class="donation-title">NEQUI / DAVIPLATA</div>
-      </div>
-      <div class="donation-body">
-        <div class="donation-row">
-          <span class="donation-label">NEQUI</span>
-          <span class="donation-value">+57 320 333 4162</span>
-          <button class="copy-btn" onclick="copy('+57 320 333 4162',this)">COPIAR</button>
-        </div>
-        <div class="donation-row">
-          <span class="donation-label">DAVIPLATA</span>
-          <span class="donation-value">+57 313 217 0921</span>
-          <button class="copy-btn" onclick="copy('+57 313 217 0921',this)">COPIAR</button>
-        </div>
-        <div class="donation-row">
-          <span class="donation-label">NOMBRE</span>
-          <span class="donation-value">Ipuc Patio Bonito</span>
-          <button class="copy-btn" onclick="copy('Ipuc Patio Bonito',this)">COPIAR</button>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Bancolombia -->
-    <div class="donation-card">
-      <div class="donation-header">
-        <div class="donation-icon">🏦</div>
-        <div class="donation-title">BANCOLOMBIA</div>
-      </div>
-      <div class="donation-body">
-        <div class="donation-row">
-          <span class="donation-label">TIPO</span>
-          <span class="donation-value">Cuenta de Ahorros</span>
-        </div>
-        <div class="donation-row">
-          <span class="donation-label">CUENTA</span>
-          <span class="donation-value">123 456 789 – 00</span>
-          <button class="copy-btn" onclick="copy('12345678900',this)">COPIAR</button>
-        </div>
-        <div class="donation-row">
-          <span class="donation-label">NOMBRE</span>
-          <span class="donation-value">Ipuc Patio Bonito</span>
-          <button class="copy-btn" onclick="copy('Ipuc Patio Bonito',this)">COPIAR</button>
-        </div>
-        <div class="donation-row">
-          <span class="donation-label">NIT</span>
-          <span class="donation-value">900 123 456 – 7</span>
-          <button class="copy-btn" onclick="copy('9001234567',this)">COPIAR</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="cta-buttons" style="margin-top: 3rem;">
-    <a href="https://wa.me/573203334162?text=Hola,%20quiero%20enviar%20mi%20comprobante%20de%20ofrenda" target="_blank" class="cta-btn cta-primary">
-      📲 ENVIAR COMPROBANTE
-    </a>
-    <a href="/cdn-cgi/l/email-protection#0a676b79786b6e63657a684a6d676b63662469656735797f68606f697e374965677a7865686b647e6f2f383a456c786f646e6b" class="cta-btn cta-secondary" style="background:var(--black);color:var(--white);border-color:var(--black);">
-      ✉️ ENVIAR EMAIL
-    </a>
-  </div>
-</section>
-
-<!-- CTA -->
-<section class="section section-terra">
-  <h2 class="section-title">ÚNETE A<br>NUESTRA<br>COMUNIDAD</h2>
-  <div class="cta-buttons" style="margin-top: 2rem;">
-    <a href="#en-vivo" class="cta-btn cta-primary">Escuchar Ahora</a>
-    <a href="#contacto" class="cta-btn cta-secondary">Contáctanos</a>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer id="contacto">
-  <div class="footer-grid">
-    <div>
-      <div class="footer-brand">+RADIOPB</div>
-      <p class="footer-tagline">
-        La radio cristiana de Ipuc Patio Bonito.<br>
-        Transmitiendo fe, esperanza y amor desde Bogotá.
+  <!-- NOSOTROS -->
+  <section class="section section-terra" id="nosotros">
+    <div class="section-header">
+      <div class="section-number">03 — NOSOTROS</div>
+      <h2 class="section-title">IPUC<br>PATIO BONITO</h2>
+      <p class="section-subtitle">
+        Una comunidad de fe comprometida con llevar el evangelio a través de las ondas radiales desde Bogotá, Colombia.
       </p>
     </div>
-    
-    <div>
-      <div class="footer-title">Navegación</div>
-      <ul class="footer-links">
-        <li><a href="#inicio">Inicio</a></li>
-        <li><a href="#en-vivo">En Vivo</a></li>
-        <li><a href="#programas">Programas</a></li>
-        <li><a href="#nosotros">Nosotros</a></li>
-      </ul>
-    </div>
-    
-    <div>
-      <div class="footer-title">Recursos</div>
-      <ul class="footer-links">
-        <li><a href="https://www.youtube.com/@masradiopb7493" target="_blank">YouTube</a></li>
-        <li><a href="https://ipucpatiobonito.com/galeria.html">Galería</a></li>
-        <li><a href="https://ipucpatiobonito.com/masradiopb.apk">App Android</a></li>
-        <li><a href="https://ipucpatiobonito.com/chatradio.html">Chat Radio</a></li>
-      </ul>
-    </div>
-    
-    <div>
-      <div class="footer-title">Contacto</div>
-      <ul class="footer-links">
-        <li><a href="/cdn-cgi/l/email-protection#d3beb2a0a1b2b7babca3b193b4beb2babffdb0bcbe"><span class="__cf_email__" data-cfemail="d0bdb1a3a2b1b4b9bfa0b290b7bdb1b9bcfeb3bfbd">[email&#160;protected]</span></a></li>
-        <li><a href="tel:+573203334162">+57 320 333 4162</a></li>
-        <li><a href="#">Cra. 88 #38-20 Sur</a></li>
-        <li><a href="#">Bogotá, Colombia</a></li>
-      </ul>
-    </div>
-  </div>
-  
-  <div class="footer-bottom">
-    © 2026 IPUC Patio Bonito · Todos los derechos reservados
-  </div>
-</footer>
 
-<script src="../js/radiopb-main.js"></script>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-number">24/7</div>
+        <div class="stat-label">Al Aire</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">8+</div>
+        <div class="stat-label">Programas</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">4</div>
+        <div class="stat-label">Misiones</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">10+</div>
+        <div class="stat-label">Años</div>
+      </div>
+    </div>
+  </section>
 
-<!-- FIREBASE CHAT -->
-<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-<script src="js/radiopb-chat.js"></script>
+  <!-- OFRENDA -->
+  <section class="section section-white" id="ofrenda">
+    <div class="section-header">
+      <div class="section-number">04 — OFRENDA</div>
+      <h2 class="section-title">APOYA<br>LA OBRA</h2>
+      <p class="section-subtitle">
+        "Cada uno dé como propuso en su corazón: no con tristeza, ni por necesidad, porque Dios ama al dador alegre." —
+        2 Corintios 9:7
+      </p>
+    </div>
+
+    <div class="donation-grid">
+      <!-- Nequi/Daviplata -->
+      <div class="donation-card">
+        <div class="donation-header">
+          <div class="donation-icon">💜</div>
+          <div class="donation-title">NEQUI / DAVIPLATA</div>
+        </div>
+        <div class="donation-body">
+          <div class="donation-row">
+            <span class="donation-label">NEQUI</span>
+            <span class="donation-value">+57 320 333 4162</span>
+            <button class="copy-btn" onclick="copy('+57 320 333 4162',this)">COPIAR</button>
+          </div>
+          <div class="donation-row">
+            <span class="donation-label">DAVIPLATA</span>
+            <span class="donation-value">+57 313 217 0921</span>
+            <button class="copy-btn" onclick="copy('+57 313 217 0921',this)">COPIAR</button>
+          </div>
+          <div class="donation-row">
+            <span class="donation-label">NOMBRE</span>
+            <span class="donation-value">Ipuc Patio Bonito</span>
+            <button class="copy-btn" onclick="copy('Ipuc Patio Bonito',this)">COPIAR</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bancolombia -->
+      <div class="donation-card">
+        <div class="donation-header">
+          <div class="donation-icon">🏦</div>
+          <div class="donation-title">BANCOLOMBIA</div>
+        </div>
+        <div class="donation-body">
+          <div class="donation-qr">
+            <img src="img/qr-bancolombia.png" alt="QR Bancolombia">
+            <p>Escanea para pagar</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-buttons" style="margin-top: 3rem;">
+      <a href="https://wa.me/573203334162?text=Hola,%20quiero%20enviar%20mi%20comprobante%20de%20ofrenda"
+        target="_blank" class="cta-btn cta-primary">
+        📲 ENVIAR COMPROBANTE
+      </a>
+      
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section section-terra">
+    <h2 class="section-title">ÚNETE A<br>NUESTRA<br>COMUNIDAD</h2>
+    <div class="cta-buttons" style="margin-top: 2rem;">
+      <a href="#en-vivo" class="cta-btn cta-primary">Escuchar Ahora</a>
+      <a href="#contacto" class="cta-btn cta-secondary">Contáctanos</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="contacto">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">+RADIOPB</div>
+        <p class="footer-tagline">
+          La radio cristiana de Ipuc Patio Bonito.<br>
+          Transmitiendo fe, esperanza y amor desde Bogotá.
+        </p>
+      </div>
+
+      <div>
+        <div class="footer-title">Navegación</div>
+        <ul class="footer-links">
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#en-vivo">En Vivo</a></li>
+          <li><a href="#programas">Programas</a></li>
+          <li><a href="#nosotros">Nosotros</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-title">Recursos</div>
+        <ul class="footer-links">
+          <li><a href="https://www.youtube.com/@masradiopb7493" target="_blank">YouTube</a></li>
+          <li><a href="https://ipucpatiobonito.com/galeria.html">Galería</a></li>
+          <li><a href="https://ipucpatiobonito.com/masradiopb.apk">App Android</a></li>
+          <li><a href="#chatContainer">Chat Radio</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-title">Contacto</div>
+        <ul class="footer-links">
+          <li><a href="tel:+573203334162">+57 320 333 4162</a></li>
+          <li><a href="#">Cra. 88 #38-20 Sur</a></li>
+          <li><a href="#">Bogotá, Colombia</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2026 IPUC Patio Bonito · Todos los derechos reservados
+    </div>
+  </footer>
+
+  <script src="../js/radiopb-main.js"></script>
+
+  <!-- FIREBASE CHAT -->
+  <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+  <script src="js/radiopb-chat.js"></script>
 </body>
+
 </html>

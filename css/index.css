@@ -990,6 +990,25 @@ body {
   background: #16A34A;
 }
 
+.donation-qr {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.donation-qr img {
+  width: 330px;
+  max-width: 100%;
+  border: 3px solid var(--black);
+  padding: .5rem;
+}
+
+.donation-qr p {
+  margin-top: .8rem;
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--gray);
+}
+
 /* ═══════════════════════════════════════════════════
    CTA BUTTONS
 ═══════════════════════════════════════════════════ */
